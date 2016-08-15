@@ -88,6 +88,8 @@ $position = get_the_author_meta( 'user_position' );
 	            <?php } else { ?>
 	            	<?php if( in_category($arch_category) && $podhide_posts == false ) : ?>
 	                	<?php previous_post_link('%link &rarr;', '%title', true, ''); ?>
+	                <?php elseif( in_category($arch_category) && $podhide_posts == true ) : ?>
+	                	<?php previous_post_link('%link &rarr;', '%title', false, ''); ?>
 	            	<?php else : ?>
 	            		<?php previous_post_link('%link &rarr;', '%title', false, $arch_category, 'category'); ?>
 	            	<?php endif; ?>
@@ -100,6 +102,8 @@ $position = get_the_author_meta( 'user_position' );
             	<?php } else { ?>
 	                <?php if( in_category($arch_category) && $podhide_posts == false ) : ?>
 	                	<?php next_post_link('&larr; %link', '%title', true, ''); ?>
+	                <?php elseif( in_category($arch_category) && $podhide_posts == true ) : ?>
+	                	<?php next_post_link('&larr; %link', '%title', false, ''); ?>
 	                <?php else : ?>
 	                	<?php next_post_link('&larr; %link', '%title', false, $arch_category, 'category'); ?>
 	                <?php endif; ?>

@@ -115,7 +115,6 @@ $heading_align = get_post_meta($post->ID, 'cmb_thst_page_header_align', true);
 											</div>
 											
 										</header>
-										<?php the_excerpt(); ?>
 										<footer class="entry-footer">
 											<ul class="podpost-meta clearfix">
 												<li class="title<?php echo $is_truncate;?>"><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a></li>
@@ -157,8 +156,8 @@ $heading_align = get_post_meta($post->ID, 'cmb_thst_page_header_align', true);
 														</div>
 												<?php endif; ?>
 											</div>
-											
 										</header>
+										<?php the_excerpt(); ?>
 										<footer class="entry-footer">
 											<ul class="podpost-meta">
 												<li class="title<?php echo $is_truncate;?>"><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a></li>

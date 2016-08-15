@@ -19,10 +19,12 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 
 	// Start with an underscore to hide fields from custom fields list
 	$prefix = 'cmb_';
-	$options = get_option('podcaster-theme');	
+	$options = get_option('podcaster-theme');
+	$feat_head_type = pod_theme_option('pod-featured-header-type');
+	$feat_head_cont = pod_theme_option('pod-featured-header-content');
 	$activepp_plugin = get_pod_plugin_active();
 	
-	if( pod_theme_option('pod-featured-header-type') == 'static-posts' || pod_theme_option('pod-featured-header-type') == 'slideshow' ){
+	if( $feat_head_type == 'static-posts' || $feat_head_type == 'slideshow' ){
 		$meta_boxes[] = array(
 			'id'         => 'thst_featured_post',
 			'title'      => __( 'Featured Post', 'thstlang' ),
@@ -80,7 +82,7 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 				),
 				array(
 					'name' => __( 'Parallax', 'thstlang' ),
-					'desc' => __( 'Tick the box to activate parallax.(Parallax is not supported if the slideshow is active.)', 'thstlang' ),
+					'desc' => __( 'Tick the box to activate parallax background scrolling.', 'thstlang' ),
 					'id'   => $prefix . 'thst_feature_post_para',
 					'type' => 'checkbox',
 				),
@@ -170,7 +172,7 @@ function cmb_sample_metaboxes( array $meta_boxes ) {
 				    'options' => array(
 				        'video-oembed' => __( 'Video oEmbed Code', 'thstlang' ),
 				        'video-embed-url'   => __( 'Video Embed Code', 'thstlang' ),
-				        'video-url'     => __( 'Video URL', 'thstlang' ),
+				        'video-url'     => __( 'Video URL (Upload/Self-Hosted)', 'thstlang' ),
 				        'video-playlist'     => __( 'Video Playlist', 'thstlang' ),
 				    ),
 				    'default' => 'video-oembed',

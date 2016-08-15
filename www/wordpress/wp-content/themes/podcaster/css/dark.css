@@ -95,22 +95,30 @@ blockquote {
 	background-color: #141414;
 	color:#555;
 }
-.latest-episode .mejs-container,
-.latest-episode .mejs-embed,
-.latest-episode .mejs-embed body {
-  background: #141414;
+.podcaster-theme .latest-episode .mejs-container,
+.podcaster-theme .latest-episode .mejs-embed,
+.podcaster-theme .latest-episode .mejs-embed body {
+  background: transparent;
 }
+.latest-episode.front-header .mejs-container .mejs-controls, 
+.latest-episode.front-header .mejs-container, 
+.latest-episode.front-header .mejs-embed, 
+.latest-episode.front-header .mejs-embed body {
+	background: transparent;
+}
+
 .latest-episode .main-featured-post a:link,
 .latest-episode .main-featured-post a:visited {
 	color:#fff;
 }
+
 .latest-episode .mejs-container .mejs-controls {
-	background-color: #141414;
+	background-color: transparent;
 }
-.latest-episode .mejs-controls .mejs-time-rail .mejs-time-total,
+/*.latest-episode .mejs-controls .mejs-time-rail .mejs-time-total,
 .latest-episode .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total {
 	background:#222;
-}
+}*/
 .latest-episode .wp-audio-playlist .mejs-container .mejs-controls {
 	background-color: transparent;
 }
@@ -435,6 +443,12 @@ blockquote {
 }
 .single .sidebar .widget {
 	background-color: #121212;
+}
+.single .sidebar .widget, 
+.page .sidebar .widget, 
+.single .widget.widget_text .textwidget, 
+.page .widget.widget_text .textwidget {
+	padding:24px;
 }
 .single .sidebar .widget h3 {
 	padding-top:0;

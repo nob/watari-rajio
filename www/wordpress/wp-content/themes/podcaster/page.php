@@ -96,9 +96,11 @@ $pod_sticky_header = isset( $options['pod-sticky-header'] ) ? $options['pod-stic
 								        'echo' => 1 )
 								    );
 								 ?>	
-								<div class="comment_container">						
-									<?php comments_template(); ?> 
-								</div><!--comment_container-->
+								<?php if( comments_open() ) : ?>
+									<div class="comment_container">						
+										<?php comments_template(); ?> 
+									</div><!--comment_container-->
+								<?php endif; ?>
 							</div><!--content-->			
 						</div>
 			        </div>

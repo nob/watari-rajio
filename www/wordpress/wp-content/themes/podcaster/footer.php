@@ -34,6 +34,13 @@ $pod_github = isset( $options['pod-github'] ) ? $options['pod-github'] : '';
 $pod_xing = isset( $options['pod-xing'] ) ? $options['pod-xing'] : '';
 $pod_linkedin = isset( $options['pod-linkedin'] ) ? $options['pod-linkedin'] : '';
 
+$pod_snapchat = pod_theme_option('pod-snapchat');
+$pod_vine = pod_theme_option('pod-vine');
+$pod_mixcloud = pod_theme_option('pod-mixcloud');
+$pod_spotify = pod_theme_option('pod-spotify');
+$pod_itunes = pod_theme_option('pod-itunes');
+$pod_rss = pod_theme_option('pod-rss');
+
 ?>
 
 <footer class="main">
@@ -53,6 +60,9 @@ $pod_linkedin = isset( $options['pod-linkedin'] ) ? $options['pod-linkedin'] : '
 						<?php if( $pod_email !="" ) { ?>
 						<a class="email social_icon" href="mailto:<?php echo $pod_email; ?>"></a>
 						<?php } ?>
+						<?php if( $pod_rss !="" ) { ?>
+						<a class="rss social_icon" href="<?php echo $pod_rss ?>"></a>
+						<?php } ?>
 						<?php if( $pod_facebook !="" ) { ?>
 							<a class="facebook social_icon" href="<?php echo $pod_facebook ?>"></a>
 						<?php } ?>
@@ -65,8 +75,20 @@ $pod_linkedin = isset( $options['pod-linkedin'] ) ? $options['pod-linkedin'] : '
 						<?php if( $pod_instagram !="" ) { ?>
 						<a class="instagram social_icon" href="<?php echo $pod_instagram ?>"></a>
 						<?php } ?>
+						<?php if( $pod_snapchat !="" ) { ?>
+						<a class="snapchat social_icon" href="<?php echo $pod_snapchat ?>"></a>
+						<?php } ?>
+						<?php if( $pod_itunes !="" ) { ?>
+						<a class="itunes social_icon" href="<?php echo $pod_itunes ?>"></a>
+						<?php } ?>
 						<?php if( $pod_soundcloud !="" ) { ?>
 						<a class="soundcloud social_icon" href="<?php echo $pod_soundcloud ?>"></a>
+						<?php } ?>
+						<?php if( $pod_mixcloud !="" ) { ?>
+						<a class="mixcloud social_icon" href="<?php echo $pod_mixcloud ?>"></a>
+						<?php } ?>
+						<?php if( $pod_spotify !="" ) { ?>
+						<a class="spotify social_icon" href="<?php echo $pod_spotify ?>"></a>
 						<?php } ?>
 						<?php if( $pod_tumblr !="" ) { ?>
 						<a class="tumblr social_icon" href="<?php echo $pod_tumblr ?>"></a>

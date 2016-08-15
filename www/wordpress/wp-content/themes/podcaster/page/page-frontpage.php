@@ -51,8 +51,7 @@ get_header(); ?>
 
 	$pod_truncate_title = pod_theme_option('pod-front-page-titles');
 	if( $pod_truncate_title == true ) { $is_truncate = " truncate"; } else { $is_truncate = " not-truncate"; }
-	?>
-
+	?>	
 
 	<?php if( $pod_fh_type == 'text'){
 		if( function_exists( 'pod_featured_header_text') ) { echo pod_featured_header_text(); }
@@ -72,6 +71,7 @@ get_header(); ?>
 			   			<?php 
 			   			/* Variables & Paths */
 						$active_plugin = get_pod_plugin_active();
+
 						if( $pod_fh_type == 'text' ){
 							$offset = 0;
 						} elseif( $pod_fh_type == 'slideshow' ) {
@@ -90,17 +90,29 @@ get_header(); ?>
 						
 						/* WP_Query() for the most recent posts on the front page */
 
-						if( $active_plugin == 'ssp' ) { 
-							$args = array( 'post_type' => 'podcast', 'posts_per_page' => $pod_front_num_posts, 'offset' => $offset, 'paged' => get_query_var( 'paged' ), 'ignore_sticky_posts' => true );	
+						if( $active_plugin == 'ssp' ) {
+							$ssp_post_types = ssp_post_types();
+
+							$args = array( 
+								//'post_type' => 'podcast', 
+								'post_type' => $ssp_post_types,
+								'posts_per_page' => $pod_front_num_posts, 
+								'offset' => $offset, 
+								'paged' => get_query_var( 'paged' ), 
+								'ignore_sticky_posts' => true 
+							);	
 								   				
 							$category_posts2 = new WP_Query($args);
 
 							if( $category_posts2->have_posts() ) {
 								while( $category_posts2->have_posts() ) {
 								   	$category_posts2->the_post(); 
-									   	
+									
 								   	global $ss_podcasting, $wp_query;
 									$id = get_the_ID();
+									$ep_explicit = get_post_meta( $id , 'explicit' , true );
+									$ep_explicit && $ep_explicit == 'on' ? $explicit_flag = 'Yes' : $explicit_flag = 'No';
+							
 									$terms = wp_get_post_terms( $id , 'series' );
 									
 									if( ! empty( $terms )) {

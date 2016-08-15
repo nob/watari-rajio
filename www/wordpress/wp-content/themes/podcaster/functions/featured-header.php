@@ -16,9 +16,11 @@ if( ! function_exists( 'pod_themeoption_typekit' ) ) {
 if( ! function_exists( 'pod_themeoption_css' ) ) {
 	add_action('wp_head','pod_themeoption_css');
 	function pod_themeoption_css() {
+
+		$pod_typography = pod_theme_option('pod-typography');
 		$pod_custom_css = pod_theme_option('pod-typekit-css-code');
 
-		if( $pod_custom_css != '') {
+		if( $pod_custom_css != '' && $pod_typography == 'custom-typekit' ) {
 			$css = '';
 			$css .= '<style>';
 				$css .= $pod_custom_css;
@@ -90,6 +92,27 @@ if( ! function_exists( 'pod_the_blog_content' ) ) {
 	}
 }
 
+/**
+ * pod_menu_border()
+ * Checks if navigation border is activated.
+ *
+ * @return string $output
+ * @since Podcaster 1.5.9
+ */
+if( ! function_exists( 'pod_menu_border' ) ) {
+	function pod_menu_border() {
+		$pod_nav_border = pod_theme_option('pod-nav-border');
+
+		$output = '';
+		if( $pod_nav_border == true ) {
+			$output .= 'nav-has-border';
+		} else {
+			$output .='';
+		}
+
+		return $output;
+	}
+}
 /**
  * pod_next_week()
  * Next week/scheduled posts.
@@ -255,39 +278,100 @@ if( !function_exists('pod_explicit_post') ){
  * @since Podcaster 1.5
  */
 if( ! function_exists('pod_the_embed' ) ) {
-	function pod_the_embed($text="", $multimedia=""){
+	function pod_the_embed( $post_id, $heading="", $text="", $multimedia="", $heading_position="below", $excerpt_position="below" ){
 
 		/* Theme Option Values */
-		$pod_embed_style = pod_theme_option('pod-embed-style');
-		$pod_embed_widths = pod_theme_option('pod-embed-widths');
+		$pod_embed_style = pod_theme_option( 'pod-embed-style' );
+		$pod_embed_widths = pod_theme_option( 'pod-embed-widths' );
+		$pod_embed_alignment = pod_theme_option( 'pod-embed-aligment' );
+		$pod_fp_ex = pod_theme_option('pod-frontpage-fetured-ex');
+		$pod_fp_ex_posi = pod_theme_option( 'pod-frontpage-featured-ex-posi' );
+		$pod_featured_header_type = pod_theme_option( 'pod-featured-header-type' );
+		$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
+
+		if( $pod_featured_header_type == 'static' ){
+			$align = 'align-' . $pod_embed_alignment;
+		} else {
+			$align = '';
+		}
+
 		if( $pod_embed_widths == 'narrow' ) {
 			$t_width = '8';
 			$m_width = '4';
+			if( $pod_embed_style == "center" ) {
+				$m_width = '6';
+				$offset_width = '3';
+				$t_width = '12';
+				$t_offset_width = '0';
+			}
 		} elseif( $pod_embed_widths == 'equal' ) {
 			$t_width = '6';
 			$m_width = '6';
+			if( $pod_embed_style == "center" ) {
+				$m_width = '8';
+				$offset_width = '2';
+				$t_width = '12';
+				$t_offset_width = '0';
+			}
 		} elseif( $pod_embed_widths == 'wide' ) {
 			$t_width = '4';
 			$m_width = '8';
+			if( $pod_embed_style == "center" ) {
+				$m_width = '10';
+				$offset_width = '1';
+				$t_width = '12';
+				$t_offset_width = '0';
+			}
+		} elseif( $pod_embed_widths == 'full'  ) {
+			$t_width = '4';
+			$m_width = '8';
+			if( $pod_embed_style == "center" ) {
+				$m_width = '12';
+				$offset_width = '0';
+				$t_width = '12';
+				$t_offset_width = '0';
+			}
 		}
 
 		$output = '';
 		if( $pod_embed_style == "left" ) {
-			$output .= '<div class="col-lg-' .$t_width. ' pulls-right">' . $text. '</div>
-				<div class="col-lg-' .$m_width. ' pulls-left">' .$multimedia. '</div>';
+			$output .= '
+				<div class="col-lg-' .$t_width. ' pulls-right">' .$heading;
+				if( $pod_fp_ex == true ) {
+					$output .= $text;
+				}
+				$output .= '</div>';
+				$output .= '<div class="col-lg-' .$m_width. ' pulls-left">' .$multimedia. '</div>';
 		} elseif( $pod_embed_style == "right" ) {
-			$output .= '<div class="col-lg-' .$m_width. ' pulls-right">' .$multimedia. '</div> 
-				<div class="col-lg-' .$t_width. ' pulls-left">' . $text. '</div>';
-		} elseif( $pod_embed_style == "center-bottom" ) {
-			$output .= '<div class="col-lg-12">' .$multimedia. '</div> 
-				<div class="col-lg-12">' . $text. '</div>';
-		} elseif( $pod_embed_style == "center-top" ) {
-			$output .= '<div class="col-lg-12">' . $text. '</div>
-				<div class="col-lg-12">' .$multimedia. '</div>';
+			$output .= '
+				<div class="col-lg-' .$m_width. ' pulls-right">' .$multimedia. '</div>
+				<div class="col-lg-' .$t_width. ' pulls-left">' .$heading;
+				if( $pod_fp_ex == true ) {
+					$output .= $text;
+				}
+				$output .= '</div>';
+		} elseif( $pod_embed_style == "center" ) {
+			$output .= '<div class="' .$align. ' col-lg-' .$t_width. ' col-lg-offset-' .$t_offset_width. ' video-text heading heading-' .$pod_fp_ex_posi. '">' .$heading. '</div>';
+			if(  $pod_fp_ex == true && $pod_fp_ex_posi == "above" ) {
+				$output .= '<div class="' .$align. ' col-lg-' .$t_width. ' col-lg-offset-' .$t_offset_width. ' video-text excerpt-' .$pod_fp_ex_posi. ' content">' .$text. '</div>';
+			}
+
+			$output .= '<div class="col-lg-' .$m_width. ' col-lg-offset-' .$offset_width. '">' .$multimedia. '</div>';
+			
+			if( $pod_fp_ex == true && $pod_fp_ex_posi == "below" ) {
+				$output .= '<div class="' .$align. ' col-lg-' .$t_width. ' col-lg-offset-' .$t_offset_width. ' video-text excerpt-' .$pod_fp_ex_posi. ' content">' .$text. '</div>';
+			}
 		} else {
-			$output .= '<div class="col-lg-12">' . $text. '</div>
-				<div class="col-lg-12">' .$multimedia. '</div>';
+			$output .= '
+				<div class="col-lg-12">' .$multimedia. '</div> 
+				<div class="col-lg-12">' . $heading. '</div>';
+				
+			if( $pod_fp_ex == true ) {
+				$ouput .= '<div class="col-lg-12">' . $text. '</div>';
+			}
+			
 		}
+
 
 		return $output;
 	}
@@ -307,175 +391,386 @@ if( ! function_exists('pod_featured_multimedia') ) {
 		$plugin_inuse = get_pod_plugin_active();
 		$post_format = get_post_format($post_id);
 		$pod_featured_excerpt = pod_theme_option('pod-frontpage-fetured-ex');
-		$post_featured_media = '';
+		$pod_featured_title_position = pod_theme_option('pod-embed-title-position');
+		$pod_featured_excerpt_position = pod_theme_option('pod-embed-excerpt-position');
+		$pod_featured_excerpt_style = pod_theme_option('pod-frontpage-featured-ex-style');
 
+		$output = '';
+
+		/* If Seriously Simple Podcasting Plugin is active */
 		if( $plugin_inuse == 'ssp' ) {
-				$pod_fh_heading = pod_theme_option( 'pod-featured-heading' );
+			$pod_fh_heading = pod_theme_option( 'pod-featured-heading' );
 
-				
-				$id = get_the_ID();
-				$file = get_post_meta( $post_id , 'enclosure' , true );
-				$terms = wp_get_post_terms( $post_id , 'series' );
-				foreach( $terms as $term ) {
-					$series_id = $term->term_id;
-					$series = $term->name;
-					break;
+
+			$id = get_the_ID();
+			$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
+			$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
+			$post_object = get_post( $post_id );
+			$enclosure_file = get_post_meta( $post_id , 'enclosure' , true );
+			$audio_file = get_post_meta( $post_id , 'audio_file' , true );
+
+			if( $audio_file != '' ) {
+				if(strpos($audio_file, "\n") !== FALSE) {
+					$audio_file = '';
 				}
-				$post_featured_media .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
-				$post_featured_media .= pod_explicit_post($post->ID);
-				$post_featured_media .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';										
-						
-				if( $file != '' ) {
-					$post_featured_media .= '<div class="audio"><div class="audio_player">' . do_shortcode('[audio src="' . $file . '"][/audio]') . '</div><!--audio_player--></div><!-- .audio -->';
-				} else {
-					$post_featured_media .= '';
+				$file = $audio_file;
+			} elseif( $enclosure_file != '' ) {
+				if(strpos($enclosure_file, "\n") !== FALSE) {
+					$enclosure_file = '';
 				}
-				if ( $pod_featured_excerpt == true ) { 
-							$post_featured_media .= '<div class="featured-excerpt ' . $post_format .'">';
-								$post_featured_media .= get_the_excerpt();
-								$post_featured_media .= '<a href="' . get_permalink() . '" class="more-link">';
-									$post_featured_media .= __( ' Read More', 'thstlang');
-									$post_featured_media .= '<span class="meta-nav"></span>
-								</a>';
-							$post_featured_media .= '</div>';
-						}
-			} elseif( $plugin_inuse == 'bpp'){
-				$pod_fh_heading = pod_theme_option( 'pod-featured-heading' );
-					
-				$pp_audio_str = get_post_meta( $post_id, 'enclosure', true );
-				$pp_audiourl = strtok($pp_audio_str, "\n");
-				$post_featured_media .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
-						$post_featured_media .= pod_explicit_post($post->ID);
-						$post_featured_media .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';										
-						
-				if( $pp_audiourl != '') {								
-					$post_featured_media .= get_the_powerpress_content(); 
-				}
-				if ( $pod_featured_excerpt == true ) { 
-							$post_featured_media .= '<div class="featured-excerpt ' . $post_format .'">';
-								$post_featured_media .= get_the_excerpt();
-								$post_featured_media .= '<a href="' . get_permalink() . '" class="more-link">';
-									$post_featured_media .= __( ' Read More', 'thstlang');
-									$post_featured_media .= '<span class="meta-nav"></span>
-								</a>';
-							$post_featured_media .= '</div>';
-						}
+				$file = $enclosure_file;
 			} else {
-				
-				if( $post_format == 'audio' ){
-					$audiourl = get_post_meta( $post_id, 'cmb_thst_audio_url', true );
-					$audioembed = get_post_meta( $post_id, 'cmb_thst_audio_embed', true );
-					$audioembedcode = get_post_meta( $post_id, 'cmb_thst_audio_embed_code', true );
-					$audiocapt = get_post_meta( $post_id, 'cmb_thst_audio_capt', true );
-					$audioplists = get_post_meta( $post_id, 'cmb_thst_audio_playlist', true );
-					$au_uploadcode = wp_audio_shortcode( $audiourl );
-					$audioex = get_post_meta( $post_id, 'cmb_thst_audio_explicit', true );
+				$file = '';
+			}
 
-					$options = get_option('podcaster-theme');
-					$pod_fh_heading = isset( $options['pod-featured-heading'] ) ? $options['pod-featured-heading'] : '';
-					
-					$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
-					$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
-					$post_object = get_post( $post_id );
-					$fheader_type = pod_theme_option('pod-featured-header-type');
+			$fheader_type = pod_theme_option('pod-featured-header-type');
+			$pod_excerpt_link = pod_theme_option('pod-frontpage-featured-read-more');
+			$pod_ex_posi = pod_theme_option('pod-frontpage-featured-ex-posi');
 
-					if( $fheader_type == 'static' ) { 
-						$post_excerpt = get_the_excerpt();
+			if( $fheader_type == 'static' ) { 
+					$post_excerpt = get_the_excerpt();
+			} else {
+				if( $has_excerpt == 'on') {
+					if( $post_object->post_excerpt ) {
+						$post_excerpt = $post_object->post_excerpt;
+					} elseif( isset($excerpt_count) ) {
+						$post_excerpt = pod_flexible_excerpt( $id, $excerpt_count );
 					} else {
-						if( $has_excerpt == 'on') {
-							if( $post_object->post_excerpt ) {
-								$post_excerpt = $post_object->post_excerpt;
-							} elseif( isset($excerpt_count) ) {
-								$post_excerpt = pod_flexible_excerpt( $post_id, $excerpt_count );
-							} else {
-								$post_excerpt = '';
-							}
-						} else {
-							$post_excerpt = '';
-						}
+						$post_excerpt = '';
 					}
-								        
-					if($audioembed != '') {
-						$file_parts = pathinfo($audioembed);
-						if(array_key_exists("extension", $file_parts )) {
-							$audioembed ='';
-							$au_embedcode = "<p>Please use a valid embed URL. Make sure it doesn't have a file extension, such as *.mp3.</p>";
-						} else {
-							$au_embedcode = wp_oembed_get( $audioembed );
-						}
-						$post_featured_media .= '<div class="row">' .pod_the_embed('<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>','<div class="audio_player au_oembed">' . $au_embedcode . '</div><!--audio_player-->'). '</div>';
-					} elseif($audiourl != '') {
-						$post_featured_media .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
-						$post_featured_media .= pod_explicit_post($post->ID);
-						$post_featured_media .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';										
-											
-						$post_featured_media .= '<div class="audio_player">' . do_shortcode('[audio src="' .$audiourl. '"][/audio]') . '</div><!--audio_player-->';	
-						if ( $pod_featured_excerpt == true ) { 
-							$post_featured_media .= '<div class="featured-excerpt ' . $post_format .'">';
-								$post_featured_media .= get_the_excerpt();
-								$post_featured_media .= '<a href="' . get_permalink() . '" class="more-link">';
-									$post_featured_media .= __( ' Read More', 'thstlang');
-									$post_featured_media .= '<span class="meta-nav"></span>
-								</a>';
-							$post_featured_media .= '</div>';
-						}
-					} elseif( is_array( $audioplists ) ) {
-						$post_featured_media .= '<div class="row">' .pod_the_embed( '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>', do_shortcode('[playlist type="audio" ids="'.implode(',', array_keys($audioplists)).'"][/playlist]')). '</div>';
-					} elseif ( $audioembedcode != '') {
-						$post_featured_media .= '<div class="row">' .pod_the_embed( '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>','<div class="audio_player embed_code">' . $audioembedcode . '</div><!--audio_player-->'). '</div>';
-					} else {
-						$post_featured_media .= '';
-					} 
-				} elseif( $post_format == 'video' ) {
-					$options = get_option('podcaster-theme');
-					$pod_fh_heading = isset( $options['pod-featured-heading'] ) ? $options['pod-featured-heading'] : '';
-					
-					$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
-					$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
-					$post_object = get_post( $post_id );
-					$fheader_type = pod_theme_option('pod-featured-header-type');
-
-					if( $fheader_type == 'static' ) { 
-						$post_excerpt = get_the_excerpt();
-					} else {
-						if( $has_excerpt == 'on') {
-							if( $post_object->post_excerpt ) {
-								$post_excerpt = $post_object->post_excerpt;
-							} elseif( isset($excerpt_count) ) {
-								$post_excerpt = pod_flexible_excerpt( $post_id, $excerpt_count );
-							} else {
-								$post_excerpt = '';
-							}
-						} else {
-							$post_excerpt = '';
-						}
-					}
-					
-
-					$videoembed = get_post_meta( $post_id, 'cmb_thst_video_embed', true );
-					$videoembedcode = get_post_meta( $post_id, 'cmb_thst_video_embed_code', true );
-					$videourl = get_post_meta( $post_id, 'cmb_thst_video_url', true );
-					$videocapt = get_post_meta( $post_id, 'cmb_thst_video_capt', true );
-					$videoplists = get_post_meta( $post_id, 'cmb_thst_video_playlist', true );
-					$videothumb = get_post_meta( $post_id, 'cmb_thst_video_thumb',true );
-					$videoex = get_post_meta( $post_id, 'cmb_thst_video_explicit', true );
-					
-					$post_featured_media .= '<div class="row">';
-					if( $videoembed != '' ) {
-						$post_featured_media .= pod_the_embed('<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>', '<div class="video_player">' . wp_oembed_get($videoembed) . '</div>');
-					} elseif( $videourl != '' ){
-						$post_featured_media .= pod_the_embed('<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>', '<div class="video_player"> ' . do_shortcode('[video poster="' .$videothumb. '" src="' .$videourl. '"][/video]') .'</div>');
-					} elseif( is_array( $videoplists ) ) {
-						$post_featured_media .= pod_the_embed('<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>', '<div class="video_player">' . do_shortcode('[playlist type="video" ids="'.implode(',', array_keys($videoplists)).'"][/playlist]') .'</div>');
-					} elseif ( $videoembedcode != '') {
-						$post_featured_media .= pod_the_embed('<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2> <p>' . $post_excerpt . '</p><a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>', '<div class="video_player">' . $videoembedcode .'</div>');
-					} else {
-						$post_featured_media .= '';
-					}
-					$post_featured_media .= '</div>';
+				} else {
+					$post_excerpt = '';
 				}
 			}
-		return $post_featured_media;
+
+			/* Check if the excerpt is empty. */
+			if( $post_excerpt == '' ) {
+				$post_excerpt = '';
+			} else {
+				if( $pod_excerpt_link == 'show') {
+					$pod_read_more = '<a class="more-link" href="' . get_permalink($id ) . '">' .__('Read More', 'thstlang'). '</a>';
+				} else {
+					$pod_read_more = '';
+				}
+				$post_excerpt = '<div class="featured-excerpt ' . $post_format .' ' .$pod_featured_excerpt_style. '"><p>' . $post_excerpt . ' ' .$pod_read_more . '</p></div>';
+			}
+
+			$terms = wp_get_post_terms( $post_id , 'series' );
+			foreach( $terms as $term ) {
+				$series_id = $term->term_id;
+				$series = $term->name;
+				break;
+			}
+			
+
+			if( $file != '' ) {
+				$ssp_ep_type = get_post_meta( $post_id, 'episode_type', true );
+				if( $ssp_ep_type == "video" ) {
+
+					$output .= '<div class="row">';
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player">' . do_shortcode('[video src="' .$file. '"][/video]') . '</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+					$output .= '</div><!-- .row -->';
+
+				} else {
+					$output .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
+					$output .= pod_explicit_post($post->ID);
+					$output .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';										
+					
+					if ( $pod_featured_excerpt == true && $pod_ex_posi == 'above' ) { 
+						$output .= $post_excerpt;
+					}
+					
+					$output .= '<div class="audio"><div class="audio_player">' . do_shortcode('[audio src="' . $file . '"][/audio]'	) . '</div><!--audio_player--></div><!-- .audio -->';
+					
+					if ( $pod_featured_excerpt == true && $pod_ex_posi == 'below' ) { 
+						$output .= $post_excerpt;
+					}
+				}
+			} else {
+				$output .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
+				$output .= pod_explicit_post($post->ID);
+				$output .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';	
+				$output .= $post_excerpt;
+			}
+
+			
+
+		/* If BluBrry PowerPress Plugin is active */
+		} elseif( $plugin_inuse == 'bpp'){
+			$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
+			$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
+			$post_object = get_post( $post_id );
+			
+			$pod_fh_heading = pod_theme_option( 'pod-featured-heading' );
+			$fheader_type = pod_theme_option('pod-featured-header-type');
+			$pod_excerpt_link = pod_theme_option('pod-frontpage-featured-read-more');
+			$pod_ex_posi = pod_theme_option('pod-frontpage-featured-ex-posi');
+
+			if( $fheader_type == 'static' ) { 
+					$post_excerpt = get_the_excerpt();
+			} else {
+				if( $has_excerpt == 'on') {
+					if( $post_object->post_excerpt ) {
+						$post_excerpt = $post_object->post_excerpt;
+					} elseif( isset($excerpt_count) ) {
+						$post_excerpt = pod_flexible_excerpt( $post_id, $excerpt_count );
+					} else {
+						$post_excerpt = '';
+					}
+				} else {
+					$post_excerpt = '';
+				}
+			}
+
+			/* Check if the excerpt is empty. */
+			if( $post_excerpt == '' ) {
+				$post_excerpt = '';
+			} else {
+				if( $pod_excerpt_link == 'show') {
+					$pod_read_more = '<a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>';
+				} else {
+					$pod_read_more = '';
+				}
+				$post_excerpt = '<div class="featured-excerpt ' . $post_format .' ' .$pod_featured_excerpt_style. '"><p>' . $post_excerpt . ' ' .$pod_read_more . '</p></div>';
+			}
+			
+			if( $post_format == "video" ) {
+
+				$pp_audio_str = get_post_meta( $post_id, 'enclosure', true );
+				$output .= '<div class="row">';
+				if( $pp_audio_str != '' ) {
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player">' . get_the_powerpress_content() . '</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+				}
+				$output .= '</div><!-- .row -->';
+
+			} else {	
+				$pp_audio_str = get_post_meta( $post_id, 'enclosure', true );
+				$pp_audiourl = strtok($pp_audio_str, "\n");
+				$output .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
+				$output .= pod_explicit_post($post->ID);
+				$output .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';										
+				
+				if ( $pod_featured_excerpt == true && $pod_ex_posi == 'above' ) { 
+					$output .= $post_excerpt;
+				}
+
+				if( $pp_audiourl != '') {								
+					$output .= get_the_powerpress_content(); 
+				}
+
+				if ( $pod_featured_excerpt == true && $pod_ex_posi == 'below' ) { 
+					$output .= $post_excerpt;
+				}
+			}
+
+		/* If no specific podcasting plugin is active */
+		} else {
+			
+			/* If a the post format is "audio" */
+			if( $post_format == 'audio' ){
+				$audiourl = get_post_meta( $post_id, 'cmb_thst_audio_url', true );
+				$audioembed = get_post_meta( $post_id, 'cmb_thst_audio_embed', true );
+				$audioembedcode = get_post_meta( $post_id, 'cmb_thst_audio_embed_code', true );
+				$audiocapt = get_post_meta( $post_id, 'cmb_thst_audio_capt', true );
+				$audioplists = get_post_meta( $post_id, 'cmb_thst_audio_playlist', true );
+				$au_uploadcode = wp_audio_shortcode( $audiourl );
+				$audioex = get_post_meta( $post_id, 'cmb_thst_audio_explicit', true );
+
+				$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
+				$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
+				$post_object = get_post( $post_id );
+
+				$options = get_option('podcaster-theme');
+				$fheader_type = pod_theme_option('pod-featured-header-type');
+				$pod_fh_heading = pod_theme_option('pod-featured-heading');
+				$pod_excerpt_link = pod_theme_option('pod-frontpage-featured-read-more');
+				$pod_ex_posi = pod_theme_option('pod-frontpage-featured-ex-posi');
+
+				if( $fheader_type == 'static' ) { 
+					$post_excerpt = get_the_excerpt();
+				} else {
+					if( $has_excerpt == 'on') {
+						if( $post_object->post_excerpt ) {
+							$post_excerpt = $post_object->post_excerpt;
+						} elseif( isset($excerpt_count) ) {
+							$post_excerpt = pod_flexible_excerpt( $post_id, $excerpt_count );
+						} else {
+							$post_excerpt = '';
+						}
+					} else {
+						$post_excerpt = '';
+					}
+				}
+				
+				/* Check if the excerpt is empty. */
+				if( $post_excerpt == '' ) {
+					$post_excerpt = '';
+				} else {
+					if( $pod_excerpt_link == 'show') {
+						$pod_read_more = '<a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>';
+					} else {
+						$pod_read_more = '';
+					}
+					$post_excerpt = '<div class="featured-excerpt ' . $post_format .' ' .$pod_featured_excerpt_style. '"><p>' . $post_excerpt . ' ' .$pod_read_more . '</p></div>';
+				} 
+
+				/* If a the featured audio type is oEmbed */
+				if($audioembed != '') {
+					$file_parts = pathinfo($audioembed);
+					if(array_key_exists("extension", $file_parts )) {
+						$audioembed ='';
+						$au_embedcode = "<p>Please use a valid embed URL. Make sure it doesn't have a file extension, such as *.mp3.</p>";
+					} else {
+						$au_embedcode = wp_oembed_get( $audioembed );
+					}
+					$output .= '<div class="row">' .pod_the_embed( $post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt,'<div class="audio_player au_oembed">' . $au_embedcode . '</div><!--audio_player.au_embed-->', $pod_featured_title_position, $pod_featured_excerpt_position ). '</div>';
+				
+				/* If a the featured audio type is *.mp3 */
+				} elseif($audiourl != '') {
+					$output .= '<span class="mini-title">' . $pod_fh_heading . '</span>';
+					$output .= pod_explicit_post($post->ID);
+					$output .= '<h2><a href="' . get_permalink() .'">' . get_the_title() . '</a></h2>';
+					
+					if ( $pod_featured_excerpt == true && $pod_ex_posi == 'above' ) { 
+						$output .= $post_excerpt;
+					}
+					
+					$output .= '<div class="audio_player">' . do_shortcode('[audio src="' .$audiourl. '"][/audio]') . '</div><!--audio_player-->';	
+					
+					if ( $pod_featured_excerpt == true && $pod_ex_posi == 'below' ) { 
+						$output .= $post_excerpt;
+					}
+
+				/* If a the featured audio type is *.mp3 playlist */
+				} elseif( is_array( $audioplists ) ) {
+					$output .= '<div class="row">' .pod_the_embed( $post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, do_shortcode('[playlist type="audio" ids="'.implode(',', array_keys($audioplists)).'"][/playlist]'), $pod_featured_title_position, $pod_featured_excerpt_position ). '</div>';
+				
+				/* If a the featured audio type is an embed code */
+				} elseif ( $audioembedcode != '') {
+					$output .= '<div class="row">' .pod_the_embed( $post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt,'<div class="audio_player embed_code">' . $audioembedcode . '</div><!--audio_player.embed_code-->', $pod_featured_title_position, $pod_featured_excerpt_position ). '</div>';
+				} else {
+					$output .= '';
+				} 
+			
+			/* If a the post format is "video" */
+			} elseif( $post_format == 'video' ) {
+					
+				$excerpt_count = get_post_meta( $post_id, 'cmb_thst_featured_post_excerpt_count', true);
+				$has_excerpt = get_post_meta( $post_id, 'cmb_thst_feature_post_excerpt', true);
+				$post_object = get_post( $post_id );
+
+				$options = get_option('podcaster-theme');
+				$pod_fh_heading = pod_theme_option('pod-featured-heading');
+				$fheader_type = pod_theme_option('pod-featured-header-type');
+				$pod_excerpt_link = pod_theme_option('pod-frontpage-featured-read-more');				
+
+				if( $fheader_type == 'static' ) {
+					if( $pod_featured_excerpt == true ) {
+						$post_excerpt = get_the_excerpt();
+					} else {
+						$post_excerpt = '';
+					}
+				} else {
+					if( $has_excerpt == 'on') {
+						if( $post_object->post_excerpt ) {
+							$post_excerpt = $post_object->post_excerpt;
+						} elseif( isset($excerpt_count) ) {
+							$post_excerpt = pod_flexible_excerpt( $post_id, $excerpt_count );
+						} else {
+							$post_excerpt = '';
+						}
+					} else {
+						$post_excerpt = '';
+					}
+				}
+
+				/* Check if the excerpt is empty. */
+				if( $post_excerpt == '' ) {
+					$post_excerpt = '';
+				} else {
+					if( $pod_excerpt_link == 'show') {
+						$pod_read_more = '<a class="more-link" href="' . get_permalink($post_id ) . '">' .__('Read More', 'thstlang'). '</a>';
+					} else {
+						$pod_read_more = '';
+					}
+					$post_excerpt = '<div class="featured-excerpt ' . $post_format .' ' .$pod_featured_excerpt_style. '"><p>' . $post_excerpt . ' ' . $pod_read_more . '</p></div>';
+				} 
+
+				$videoembed = get_post_meta( $post_id, 'cmb_thst_video_embed', true );
+				$videoembedcode = get_post_meta( $post_id, 'cmb_thst_video_embed_code', true );
+				$videourl = get_post_meta( $post_id, 'cmb_thst_video_url', true );
+				$videocapt = get_post_meta( $post_id, 'cmb_thst_video_capt', true );
+				$videoplists = get_post_meta( $post_id, 'cmb_thst_video_playlist', true );
+				$videothumb = get_post_meta( $post_id, 'cmb_thst_video_thumb',true );
+				$videoex = get_post_meta( $post_id, 'cmb_thst_video_explicit', true );
+					
+				$output .= '<div class="row">';
+				if( $videoembed != '' ) {
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player">' . wp_oembed_get($videoembed) . '</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+				} elseif( $videourl != '' ){
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player"> ' . do_shortcode('[video poster="' .$videothumb. '" src="' .$videourl. '"][/video]') .'</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+				} elseif( is_array( $videoplists ) ) {
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player">' . do_shortcode('[playlist type="video" ids="'.implode(',', array_keys($videoplists)).'"][/playlist]') .'</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+				} elseif ( $videoembedcode != '') {
+					$output .= pod_the_embed($post_id, '<span class="mini-title">' . $pod_fh_heading . '</span> ' . pod_explicit_post($post_id) .' <h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2>', $post_excerpt, '<div class="video_player">' . $videoembedcode .'</div>', $pod_featured_title_position, $pod_featured_excerpt_position );
+				} else {
+					$output .= '';
+				}
+				$output .= '</div>';
+			/* If the post format is neither audio nor video */
+			} else {
+				$pod_fh_heading = pod_theme_option('pod-featured-heading');
+				
+				$output .= '<div class="row"><div class="col-lg-12"><span class="mini-title">' . $pod_fh_heading . '</span>
+				<h2><a href="' . get_permalink($post_id ) . '">' . get_the_title($post_id) . '</a></h2></div></div>';
+			}
+		}
+		return $output;
+	}
+}
+
+/**
+ * pod_ssp_active_cats()
+ * Seriously Simple Podcasting categories selected to be featured with the theme options.
+ *
+ * @return array $output - Array containing all term_ids.
+ * @since Podcaster 1.5.9
+ */
+if( ! function_exists( 'pod_ssp_active_cats' ) ) {
+	function pod_ssp_active_cats( $cat_type ) {
+
+		$output = '';
+		if( $cat_type == "ssp" ) {
+			
+			$ssp_cat = pod_theme_option('pod-recordings-category-ssp');
+			if ( $ssp_cat == '' ) {
+				$ssp_cat_terms = get_terms( array(
+					   'taxonomy' => 'series'
+				) );
+
+				$ssp_cat = array();
+				foreach ( $ssp_cat_terms as $ssp_term ) {
+					$ssp_cat[] = $ssp_term->term_id;
+				}
+			}
+			$output = $ssp_cat;
+		} elseif( $cat_type == "default" ) {
+
+			$pod_cat = pod_theme_option('pod-recordings-category');
+			if( $pod_cat == '' ) {
+				$arch_cat_terms = get_terms( array(
+					'taxonomy' => 'category'
+				) );
+
+				$pod_cat = array();
+				foreach ( $arch_cat_terms as $arch_term ) {
+					   $pod_cat[] = $arch_term->term_id;
+				}
+			}
+			$output = $pod_cat;
+		}
+
+		return $output;
 	}
 }
 
@@ -502,7 +797,7 @@ if( ! function_exists('pod_featured_header_text') ){
 		$pod_sub_buttons = pod_theme_option('pod-subscribe-buttons');
 	
 		$output = '';
-		$output .= '<div class="front-page-header text ' .$header_state. ' ' .pod_is_nav_sticky(). ' ' .pod_is_nav_transparent(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-image:url(' .$pod_frontpage_header_url. '); ' .$pod_frontpage_bg_style. '"' .$parallax. '>
+		$output .= '<div class="front-page-header text ' .pod_menu_border(). ' ' .$header_state. ' ' .pod_is_nav_sticky(). ' ' .pod_is_nav_transparent(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-image:url(' .$pod_frontpage_header_url. '); ' .$pod_frontpage_bg_style. '"' .$parallax. '>
 						<div class="inside">
 							<div class="container">
 								<div class="row">
@@ -555,13 +850,31 @@ if( ! function_exists('pod_featured_header_static') ){
 		$pod_sub_buttons = pod_theme_option('pod-subscribe-buttons');
 
 		$plugin_inuse = get_pod_plugin_active();
+		
+		
 
 		if( $plugin_inuse == 'ssp' ) {
+			$pod_cat = pod_ssp_active_cats( "default" );
+			$ssp_cat = pod_ssp_active_cats( "ssp" );
+
+			$ssp_post_types = ssp_post_types();
 			$args = array(
 				'posts_per_page'   => 1,
-				'cat'         => '',
-				'post_type'        => 'podcast',
-			);
+				'post_type'        => $ssp_post_types,
+				'tax_query' => array(
+					'relation' => 'OR',
+					array(
+						'taxonomy' => 'category',
+						'field'    => 'term_id',
+						'terms'    => $pod_cat,
+					),
+					array(
+						'taxonomy' => 'series',
+						'field'    => 'term_id',
+						'terms'    => $ssp_cat,
+					),
+				),
+			);			
 		} else {
 			$args = array(
 				'posts_per_page'   => 1,
@@ -585,11 +898,11 @@ if( ! function_exists('pod_featured_header_static') ){
 				$post_permalink = get_permalink($post->ID);
 
 				if ( $pod_frontpage_header_url != '' && $pod_page_image == false ) {
-					$output .= '<div ' .$parallax. ' class="latest-episode front-header ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-position:0 0; background-image: url(' .$pod_frontpage_header_url.'); ' .$pod_frontpage_bg_style. '">';
+					$output .= '<div ' .$parallax. ' class="latest-episode front-header ' .pod_menu_border(). ' ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-position:0 0; background-image: url(' .$pod_frontpage_header_url.'); ' .$pod_frontpage_bg_style. '">';
 				} elseif( $pod_page_image == true && $thumb_back != '' ) {
-					$output .= '<div ' .$parallax. ' class="latest-episode front-header ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-position:center; background-image: url(' .$thumb_back. '); ' .$pod_frontpage_bg_style. '">';
+					$output .= '<div ' .$parallax. ' class="latest-episode front-header ' .pod_menu_border(). ' ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.'; background-position:center; background-image: url(' .$thumb_back. '); ' .$pod_frontpage_bg_style. '">';
 				} else {
-					$output .= '<div class="latest-episode ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.';">';
+					$output .= '<div class="latest-episode ' .pod_menu_border(). ' ' .pod_is_nav_transparent(). ' ' .pod_is_nav_sticky(). '" style="background-color:' .$pod_frontpage_bg_color.';">';
 				} 
 				$output .= '<div id="loading_bg"></div>';
 				if ( $pod_frontpage_header_url != '' || ( $pod_page_image == true && $thumb_back != '' ) ) { 
@@ -660,11 +973,27 @@ if( ! function_exists('pod_featured_header_static_posts') ){
 		$plugin_inuse = get_pod_plugin_active();
 		
 		if( $plugin_inuse == 'ssp' ) {
+			$pod_cat = pod_ssp_active_cats( "default" );
+			$ssp_cat = pod_ssp_active_cats( "ssp" );
+
+			$ssp_post_types = ssp_post_types();
 			$args = array(
 				'posts_per_page'   => 1,
-				'cat'         => '',
-				'post_type'        => 'podcast',
+				'post_type'        => $ssp_post_types,
 				'meta_query'	   => $is_featured,
+				'tax_query' => array(
+					'relation' => 'OR',
+					array(
+						'taxonomy' => 'category',
+						'field'    => 'term_id',
+						'terms'    => $pod_cat,
+					),
+					array(
+						'taxonomy' => 'series',
+						'field'    => 'term_id',
+						'terms'    => $ssp_cat,
+					),
+				),
 			);
 		} else {
 			$args = array(
@@ -719,7 +1048,7 @@ if( ! function_exists('pod_featured_header_static_posts') ){
 			}
 			! empty($header_img_url) ? $header_state = 'has-header' : $header_state = '';
 
-			$output .= '<div class="front-page-header static ' . pod_is_nav_transparent() . ' ' . $type . ' ' . pod_is_nav_sticky() . ' ' . $header_state . ' ' . $pod_nextweek_state .'">
+			$output .= '<div class="front-page-header static ' .pod_menu_border(). ' ' . pod_is_nav_transparent() . ' ' . $type . ' ' . pod_is_nav_sticky() . ' ' . $header_state . ' ' . $pod_nextweek_state .'">
 				<div class="background-image ' . $has_parallax . '" style="background-color:' .$pod_frontpage_bg_color.'; background-image: url(' . $header_img_url . '); ' . $bg_style . '" ' . $parallax . '>
 					<div class="inside">
 						<div class="container">
@@ -744,6 +1073,7 @@ if( ! function_exists('pod_featured_header_static_posts') ){
 		return $output;
 	}
 }
+
 
 /**
  * pod_featured_header_slideshow()
@@ -776,6 +1106,7 @@ if( ! function_exists('pod_featured_header_slideshow') ){
 		}
 		$pod_fh_slides_amount = isset( $options['pod-featured-header-slides-amount'] ) ? $options['pod-featured-header-slides-amount'] : '';
 		$arch_category = isset( $options['pod-recordings-category'] ) ? $options['pod-recordings-category'] : '';
+
 		$pod_next_week = isset( $options['pod-frontpage-nextweek'] ) ? $options['pod-frontpage-nextweek'] : '';
 		$pod_sub_buttons = pod_theme_option('pod-subscribe-buttons');
 		$pod_excerpt_type = isset( $options['pod-excerpts-type'] ) ? $options['pod-excerpts-type'] : '';
@@ -794,11 +1125,28 @@ if( ! function_exists('pod_featured_header_slideshow') ){
 		$plugin_inuse = get_pod_plugin_active();
 		
 		if( $plugin_inuse == 'ssp' ) {
+
+			$pod_cat = pod_ssp_active_cats( "default" );
+			$ssp_cat = pod_ssp_active_cats( "ssp" );
+
+			$ssp_post_types = ssp_post_types();
 			$args = array(
 				'posts_per_page'   => $pod_fh_slides_amount,
-				'cat'         => '',
-				'post_type'        => 'podcast',
+				'post_type'        => $ssp_post_types,
 				'meta_query'	   => $is_featured,
+				'tax_query' => array(
+					'relation' => 'OR',
+					array(
+						'taxonomy' => 'category',
+						'field'    => 'term_id',
+						'terms'    => $pod_cat,
+					),
+					array(
+						'taxonomy' => 'series',
+						'field'    => 'term_id',
+						'terms'    => $ssp_cat,
+					),
+				),
 			);
 		} else {
 			$args = array(
@@ -814,7 +1162,7 @@ if( ! function_exists('pod_featured_header_slideshow') ){
 		if ( $the_query->have_posts() ) {
 		$output .= '<div class="flexslider-container">';
 		$output .= '<div id="loading_bg" class="hide_bg"></div>';
-			$output .= '<div class="front-page-header slideshow loading_featured flexslider ' .pod_is_nav_transparent(). ' ' . pod_is_nav_sticky() . ' ' . $pod_nextweek_state .'">';
+			$output .= '<div class="front-page-header slideshow loading_featured flexslider ' .pod_menu_border(). ' ' .pod_is_nav_transparent(). ' ' . pod_is_nav_sticky() . ' ' . $pod_nextweek_state .'">';
 			$output .= '<div class="slides">';
 			
 			while ( $the_query->have_posts() ) {
@@ -857,9 +1205,14 @@ if( ! function_exists('pod_featured_header_slideshow') ){
 				} else {
 					$header_state = '';
 				}
+				$is_parallax = get_post_meta( $post->ID, 'cmb_thst_feature_post_para', true);
+			
+				$is_parallax == 'on' ? $parallax = 'data-stellar-background-ratio="0.5"' : $parallax = '';
+				$is_parallax == 'on' ? $has_parallax = 'parallax-on' : $has_parallax = 'parallax-off';
 
 
-				$output .= '<div class="background-image slide ' . $header_state . '" style="background-color:' .$pod_frontpage_bg_color.'; background-image: url(' . $header_img_url . '); ' . $bg_style . '">
+
+				$output .= '<div class="background-image slide ' . $header_state . ' ' . $has_parallax . ' ' . $is_parallax . ' " style="background-color:' .$pod_frontpage_bg_color.'; background-image: url(' . $header_img_url . '); ' . $bg_style . '" ' . $parallax . '>
 						<div class="inside">
 							<div class="container">
 								<div class="row">

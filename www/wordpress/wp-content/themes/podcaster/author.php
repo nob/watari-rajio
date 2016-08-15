@@ -51,13 +51,20 @@ get_header(); ?>
 										$github = get_the_author_meta( 'user_github', $author_id );
 										$stackex = get_the_author_meta( 'user_stackex', $author_id );
 
+										$rss = get_the_author_meta( 'user_rss', $author_id );
+										$snapchat = get_the_author_meta( 'user_snapchat', $author_id );
+										$spotify = get_the_author_meta( 'user_spotify', $author_id );
+										$mixcloud = get_the_author_meta( 'user_mixcloud', $author_id );
+										$vine = get_the_author_meta( 'user_vine', $author_id );
+										$itunes = get_the_author_meta( 'user_itunes', $author_id );
+
 									?>
 									<?php if( $pod_avtr_athpg == true ) : ?>
 										<?php echo get_avatar( $author_id, apply_filters( 'themestation_author_bio_avatar_size', 100 ) ); ?>
 									<?php endif; ?>
 										
 									<ul class="info">
-										<li class="author_name"><?php the_author_meta( $field2, $author_id ); ?></li>
+										<li class="author_name"><h2><?php the_author_meta( $field2, $author_id ); ?></h2></li>
 										<li class="author_position"><?php echo $position; ?></li>
 									</ul>
 									<div class="clear"></div>
@@ -65,19 +72,33 @@ get_header(); ?>
 
 										<?php if ( $email != '' ) : ?><li><a class="sicon email" href="mailto:<?php echo $email; ?>"></a></li><?php endif; ?>
 										<?php if ( $website != '' ) : ?><li><a class="sicon website" href="<?php echo $website; ?>"></a></li><?php endif; ?>
-											
+										<?php if ( $rss != '' ) : ?><li><a class="sicon rss" href="<?php echo $rss; ?>"></a></li><?php endif; ?>
+										<?php if ( $skype != '' ) : ?><li><a class="sicon skype" href="<?php echo $skype; ?>"></a></li><?php endif; ?>
 										<?php if ( $twitter != '' ) : ?><li><a class="sicon twitter" href="<?php echo $twitter; ?>"></a></li><?php endif; ?>
 										<?php if ( $facebook != '' ) : ?><li><a class="sicon facebook_2" href="<?php echo $facebook; ?>"></a></li><?php endif; ?>
 											
 										<?php if ( $google != '' ) : ?><li><a class="sicon googleplus" href="<?php echo $google; ?>"></a></li><?php endif; ?>
-										<?php if ( $skype != '' ) : ?><li><a class="sicon skype" href="<?php echo $skype; ?>"></a></li><?php endif; ?>
-											
+										
+										<?php if ( $instagram != '' ) : ?><li><a class="sicon instagram" href="<?php echo $instagram; ?>"></a></li><?php endif; ?>
+										<?php if ( $snapchat != '' ) : ?><li><a class="sicon snapchat" href="<?php echo $snapchat; ?>"></a></li><?php endif; ?>
+										<?php if ( $vine != '' ) : ?><li><a class="sicon vine" href="<?php echo $vine; ?>"></a></li><?php endif; ?>	
 										<?php if ( $youtube != '' ) : ?><li><a class="sicon youtube" href="<?php echo $youtube; ?>"></a></li><?php endif; ?>
+									
 										<?php if ( $dribbble != '' ) : ?><li><a class="sicon dribbble" href="<?php echo $dribbble; ?>"></a></li><?php endif; ?>
 										<?php if ( $flickr != '' ) : ?><li><a class="sicon flickr" href="<?php echo $flickr; ?>"></a></li><?php endif; ?>
-										<?php if ( $instagram != '' ) : ?><li><a class="sicon instagram" href="<?php echo $instagram; ?>"></a></li><?php endif; ?>
-										<?php if ( $soundcloud != '' ) : ?><li><a class="sicon soundcloud" href="<?php echo $soundcloud; ?>"></a></li><?php endif; ?>
 										<?php if ( $pinterest != '' ) : ?><li><a class="sicon pinterest" href="<?php echo $pinterest; ?>"></a></li><?php endif; ?>
+										
+										<?php if ( $itunes != '' ) : ?><li><a class="sicon itunes" href="<?php echo $itunes; ?>"></a></li><?php endif; ?>
+
+										<?php if ( $soundcloud != '' ) : ?><li><a class="sicon soundcloud" href="<?php echo $soundcloud; ?>"></a></li><?php endif; ?>
+										<?php if ( $mixcloud != '' ) : ?><li><a class="sicon mixcloud" href="<?php echo $mixcloud; ?>"></a></li><?php endif; ?>
+										<?php if ( $spotify != '' ) : ?><li><a class="sicon spotify" href="<?php echo $spotify; ?>"></a></li><?php endif; ?>
+										
+										
+										
+
+										
+										
 										<?php if ( $xing != '' ) : ?><li><a class="sicon xing" href="<?php echo $xing; ?>"></a></li><?php endif; ?>
 										<?php if ( $linkedin != '' ) : ?><li><a class="sicon linkedin" href="<?php echo $linkedin; ?>"></a></li><?php endif; ?>
 										<?php if ( $github != '' ) : ?><li><a class="sicon github" href="<?php echo $github; ?>"></a></li><?php endif; ?>

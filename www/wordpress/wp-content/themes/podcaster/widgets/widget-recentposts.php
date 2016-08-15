@@ -61,22 +61,26 @@ class thst_recent_blog_widget extends WP_Widget {
 		// Our options from the widget settings.
 		$number = $instance['number'];
 
+		// Our options from the widget settings.
+		$select = $instance['kwtax'];
+		$default_category = get_option('default_category');
+
 		// Before widget - as defined in your specific theme.
 		echo $before_widget;
 
 		/* Display The Widget */
 		
 		// Output the widget title if the user entered one in the widget options.
-		//if ( $title )
-			//echo $before_title . $title . $after_title;
-			
+			$category = isset( $select ) ? $select : $default_category;	
+
 			$query = new WP_Query();
 
 			//Send our widget options to the query
 			$query->query( array(
 				'post_type' => 'post',
 			    'posts_per_page' => $number,
-			    'ignore_sticky_posts' => 1
+			    'ignore_sticky_posts' => 1,
+			    'cat' => $category
 			 ));
 
 			$query_comm = new WP_Query();
@@ -86,7 +90,8 @@ class thst_recent_blog_widget extends WP_Widget {
 				'post_type' => 'post',
 			    'posts_per_page' => $number,
 			    'orderby' => 'comment_count',
-			    'ignore_sticky_posts' => 1
+			    'ignore_sticky_posts' => 1,
+			    'cat' => $category
 			 ));
 
 			$query_view = new WP_Query();
@@ -98,7 +103,8 @@ class thst_recent_blog_widget extends WP_Widget {
 			    'meta_key' => 'post_views_count',
 			    'orderby'=> 'meta_value',
 			    'order' => 'desc',
-			    'ignore_sticky_posts' => 1
+			    'ignore_sticky_posts' => 1,
+			    'cat' => $category
 			 ));
 
 			?>
@@ -185,6 +191,7 @@ class thst_recent_blog_widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['number'] = strip_tags( $new_instance['number'] );
+		$instance['kwtax'] = strip_tags( $new_instance['kwtax'] );
 
 		return $instance;
 	}
@@ -218,6 +225,17 @@ class thst_recent_blog_widget extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e('Post Count:', 'thstlang') ?></label>
 			<input type="text" class="widefat" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" value="<?php echo $instance['number']; ?>" />
 		</p>
+
+		<!-- Widget Categories Drop-down -->	
+        <p>
+        	<label for="<?php echo $this->get_field_id( 'kwtax' ); ?>"><?php _e('Category:', 'thstlang') ?></label>
+            <select id="<?php echo $this->get_field_id('kwtax'); ?>" name="<?php echo $this->get_field_name('kwtax'); ?>" class="widefat" style="width:100%;">
+            	<option value=""><?php _e('All Posts', 'thstlang'); ?></option>
+                <?php foreach(get_terms('category','parent=0&hide_empty=0') as $term) { ?>
+                <option <?php if( isset($instance['kwtax']) ) { selected( $instance['kwtax'], $term->term_id ); } ?> value="<?php echo $term->term_id; ?>"><?php echo $term->name; ?></option>
+                <?php } ?>      
+            </select>
+        </p>
 
 	<?php 
 	} 

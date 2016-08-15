@@ -69,8 +69,8 @@
 .podcaster-theme .mejs-controls .mejs-volume-button button {
     background:transparent;
 }
-.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total, 
-.mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
+.podcaster-theme .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-total, 
+.podcaster-theme .mejs-controls .mejs-horizontal-volume-slider .mejs-horizontal-volume-current {
     height:6px;
     border-radius: 3px;
 }

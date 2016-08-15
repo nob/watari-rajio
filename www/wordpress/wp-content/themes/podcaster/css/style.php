@@ -99,11 +99,11 @@
 	.latest-episode {
 		background-color: <?php echo $themePageHeader; ?>
 	}
-	.latest-episode .main-featured-post .mini-title {
+	.latest-episode .main-featured-post .mini-title,
+	.front-page-header .text .mini-title {
 	    color:<?php echo $themePrimary; ?>;
 	}
 	.latest-episode .next-week .mini-title,
-	.front-page-header .mini-title,
 	.next-week .mini-title {
 	    color:<?php echo $themePrimary; ?>;
 	}
@@ -499,7 +499,12 @@
   	.above.small_nav.toggle  {
   		background-color:<?php echo $themeNavBg; ?>;
 	}
-	#nav.toggle {
+	#nav.drop .thst-menu li.menu-item-has-children > .sub-menu li a:link, 
+	#nav.drop .thst-menu li.menu-item-has-children > .sub-menu li a:visited {
+		background-color:<?php echo $themeNavBg; ?>;
+	}
+	#nav.toggle,
+	#nav.drop {
 		background-color:<?php echo $themeNavBg; ?>;
 	}
 	#nav .thst-menu li.menu-item-has-children a:hover, 

@@ -10,6 +10,7 @@
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  */
 /* Loads the header.php template*/
+
 get_header();
 $options = get_option('podcaster-theme');  
 $thst_wp_version = get_bloginfo( 'version' );
@@ -79,13 +80,13 @@ $gallerycol = get_post_meta($post->ID, 'cmb_thst_gallery_col', true);
 
 	<?php if( has_post_thumbnail() && $pod_single_video_bg == true && $format == 'video' ) { ?>
 	<div style="<?php echo $pod_single_header_bgstyle; ?> background-image: url(' <?php echo $header_img; ?> ');" class="single-featured <?php echo pod_is_nav_transparent(); ?> <?php echo pod_audio_format_featured_image(); ?> <?php echo pod_has_featured_image($post->ID); ?>" <?php echo $ssp_single_parallax; ?>>	
-	<div class="background">
+	<div class="background translucent">
 	<?php } elseif( has_post_thumbnail() && $pod_single_header_display == "has-background" && ( $posttype == 'podcast' || $format == 'audio' ) ) { ?>
 	<div style="<?php echo $pod_single_header_bgstyle; ?> <?php echo $pod_single_bg_img; ?>" class="single-featured <?php echo pod_is_nav_transparent(); ?> <?php echo pod_audio_format_featured_image(); ?> <?php echo pod_has_featured_image($post->ID); ?>" <?php echo $ssp_single_parallax; ?>>	
-	<div class="background">
+	<div class="background translucent">
 	<?php } else { ?>
 	<div style="<?php echo $pod_single_header_bgstyle; ?>" class="single-featured <?php echo pod_is_nav_transparent(); ?> <?php echo pod_has_featured_image($post->ID); ?> <?php echo pod_audio_format_featured_image(); ?>" <?php echo $ssp_single_parallax; ?>>	
-	<div class="background lolo">
+	<div class="background translucent">
 	<?php } ?>
 
 		<div class="container">
@@ -98,6 +99,7 @@ $gallerycol = get_post_meta($post->ID, 'cmb_thst_gallery_col', true);
 						</div>
 					<?php } ?>
 				<?php } ?>
+
 				<?php if( $posttype == 'podcast' && $pod_plugin_active == 'ssp'  ) { ?>
 					<?php 
 					if( class_exists( 'SSP_Admin' ) ) {
@@ -119,7 +121,11 @@ $gallerycol = get_post_meta($post->ID, 'cmb_thst_gallery_col', true);
 						$explicit_flag = 'Yes';
 					} else {
 						$explicit_flag = 'No';
-					} ?>
+					} 
+
+					$ssp_ep_type = get_post_meta( $id, 'episode_type', true );
+
+					?>
 			
 					<div class="player_container <?php echo $ssp_single_thumb_style; ?>">
 						<span class="mini-title"><?php echo get_the_date(); ?> &bull; <?php echo $series_list; ?></span>
@@ -129,11 +135,16 @@ $gallerycol = get_post_meta($post->ID, 'cmb_thst_gallery_col', true);
 		  				</span>
 						<?php } ?>
 						<h2><?php echo get_the_title(); ?></h2>
-						<div class="audio">
+						
 							<?php if( $file != '' ) {
-								echo '<div class="audio_player">' . do_shortcode('[audio src="' . $file . '"][/audio]') . '</div><!--audio_player-->';
-							} ?>
-						</div><!-- .audio -->
+								if( $ssp_ep_type == "video" ){
+									echo '<div class="video_player">' . do_shortcode('[video src="' . $file . '"][/video]') . '</div><!--video_player-->';
+								} else {
+									echo '<div class="audio">';
+									echo '<div class="audio_player">' . do_shortcode('[audio src="' . $file . '"][/audio]') . '</div><!--audio_player-->';
+									echo '</div><!-- .audio -->';
+								}
+							} ?>						
 					</div><!-- .player_container -->
 					<?php } ?>
 				<?php } elseif( $format == 'audio' ) { ?>
@@ -174,18 +185,31 @@ $gallerycol = get_post_meta($post->ID, 'cmb_thst_gallery_col', true);
 					</div><!-- .player_container -->
 					<?php } ?>
 				<?php } elseif( $format == 'video' ) { ?>
-					<?php if( $videoembed != '' ) {
-						echo '<div class="video_player">' . wp_oembed_get($videoembed) . '</div><!--video_player-->';
-					}
-					if( $videourl != '' ) {
-						echo  '<div class="video_player">' . do_shortcode('[video poster="' .$videothumb. '" src="' .$videourl. '"][/video]') .'</div><!--video_player-->';
-					}
-					if( is_array( $videoplists ) ) {
-						echo  do_shortcode('[playlist type="video" ids="'.implode(',', array_keys($videoplists)).'"][/playlist]');
-					}
-					if( $videoembedcode !='' ) {
-						echo  '<div class="video_player">' . $videoembedcode . '</div><!--video_player-->';									
-					} ?>
+					<?php if( $pod_plugin_active = 'bpp' && function_exists('powerpress_content') && $pp_audiourl != '' ) { ?>
+						<div class="player_container <?php echo $bpp_single_thumb_style; ?>">
+							<span class="mini-title"><?php echo get_the_date(); ?></span>
+							<h2><?php echo get_the_title(); ?></h2>
+							<div class="video_player">
+								<?php if( $pp_audiourl !='' ) { ?>
+									<?php the_powerpress_content(); ?>
+								<?php } ?>
+							</div><!-- .audio -->
+						</div><!-- .player_container -->
+					<?php } else { ?>
+
+						<?php if( $videoembed != '' ) {
+							echo '<div class="video_player">' . wp_oembed_get($videoembed) . '</div><!--video_player-->';
+						}
+						if( $videourl != '' ) {
+							echo  '<div class="video_player">' . do_shortcode('[video poster="' .$videothumb. '" src="' .$videourl. '"][/video]') .'</div><!--video_player-->';
+						}
+						if( is_array( $videoplists ) ) {
+							echo  do_shortcode('[playlist type="video" ids="'.implode(',', array_keys($videoplists)).'"][/playlist]');
+						}
+						if( $videoembedcode !='' ) {
+							echo  '<div class="video_player">' . $videoembedcode . '</div><!--video_player-->';									
+						} ?>
+					<?php } ?>
 				<?php } elseif( $format == 'image') { ?>
 					<div class="image">
 						<?php echo get_the_post_thumbnail( $post->ID,'regular-large' ); ?>

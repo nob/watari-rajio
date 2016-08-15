@@ -243,6 +243,80 @@ function pod_info_settings_page() {
 									?>
 									<div class="feature-section">
 										<ul id="changelog">
+											<li class="first"><h2>1.5.9</h2> <span class="date">(5th May 2016)</span>
+												<ul>
+													<li><span class="label improved">Improved</span> Added theme options for videos and other embedded content
+														<div class="file"><ul>
+															<li>single.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> Added video support for PowerPress and Seriously Simple Podcasting plugins
+														<div class="file"><ul>
+															<li><span class="root">functions/</span>featured-header.php</li>
+															<li>options-config.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> More social media icons added (RSS, iTunes, Mixcloud, Spotify, Snapchat, Vine) 
+														<div class="file"><ul>
+															<li><span class="root">fonts/font-awesome</span></li>
+															<li>options-config.php</li>
+															<li>navigation.php</li>
+															<li>footer.php</li>
+															<li>style.css</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> Category setting added to recnt posts widget
+														<div class="file"><ul>
+															<li><span class="root">widgets/</span>widget-recentposts.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> More typography theme options added
+														<div class="file"><ul>
+															<li>options-config.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> More excerpt theme options added
+														<div class="file"><ul>
+															<li><span class="root">functions/</span> featured-header.php</li>
+															<li>options-config.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label improved">Improved</span> "Read More" link on front page header optional
+														<div class="file"><ul>
+															<li><span class="root">functions/</span> featured-header.php</li>
+															<li>options-config.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label minor fix">Minor Fix</span> Author name as heading on author pages fix
+														<div class="file"><ul>
+															<li>author.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label minor fix">Minor Fix</span> Audio player (in PowerPress) color fix
+														<div class="file"><ul>
+															<li><span class="root">css/</span> audio-player.css</li>
+															<li><span class="root">css/</span> dark.css</li>
+															<li>style.css</li>
+														</ul></div></li>
+													<li><span class="label minor fix">Minor Fix</span> Responsive menu color fix
+														<div class="file"><ul>
+															<li><span class="root">css/</span> stlye.php</li>
+															<li>options-config.php</li>
+														</ul></div>
+													</li>
+													<li><span class="label minor fix">Minor Fix</span> Parallax scrolling smoothed out
+														<div class="file"><ul>
+															<li><span class="root">js/</span> call-stellar.js</li>
+														</ul></div>
+													</li>
+													<li><span class="label minor fix">Minor Fix</span> Envato Market installation error fix
+													<div class="file"><ul>
+															<li><span class="root">functions/tgmpa/plugins/</span> envato-market.zip</li>
+														</ul></div>
+													</li>
+													
+												</ul>
+											</li>
 											<li class="first"><h2>1.5.8</h2> <span class="date">(24th March 2016)</span>
 												<ul>
 													<li><span class="label minor fix">Minor Fix</span> PowerPress player links fix

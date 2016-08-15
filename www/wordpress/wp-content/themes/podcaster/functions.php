@@ -827,12 +827,15 @@ if( ! function_exists('pod_has_featured_image') ) {
 	function pod_has_featured_image() {
 		$post_id = get_the_ID();
 		if( ! is_front_page() && ! is_home() && ( is_single() ||  is_page()  ) ){
+			//Used on posts and pages.
+
 			if( has_post_thumbnail($post_id) ){
 				$output = 'has-featured-image';
 			} else {
 				$output = 'no-featured-image';
 			}	
 		} elseif ( ! is_home() && is_front_page() ) {
+			//Used on Front Page
 			$featured_header_img = pod_theme_option('pod-upload-frontpage-header');
 
 			if( isset($featured_header_img['url']) != '' ) {
@@ -841,14 +844,16 @@ if( ! function_exists('pod_has_featured_image') ) {
 				$output = 'no-featured-image';
 			}
 		} elseif ( ! is_front_page() && is_home() ) {
+			//Used on Blog Page
 			$blog_header_img = pod_theme_option('pod-blog-header');
 
-			if( isset($blog_header_img['url'])!= '' ) {
+			if( $blog_header_img['url'] != '' ) {
 				$output = 'has-featured-image';
 			} else {
 				$output = 'no-featured-image';
 			}
 		} else {
+			echo ' 4 ';
 			$output = 'no-featured-image';
 		}
 		return $output;
@@ -873,6 +878,8 @@ if( ! function_exists('pod_audio_format_featured_image') ) {
 			} else {
 				$output = 'audio-featured-image-thumbnail';
 			}
+		} elseif( is_single() && ( $format =='video' ) ) {
+			$output = 'video-featured-image-background';
 		} else {
 			$output = '';
 		}
@@ -940,7 +947,8 @@ add_filter( 'kses_allowed_protocols' , 'pod_allow_skype_protocol' );
 if( ! function_exists('thst_user_contactmethods') ) {            
     function thst_user_contactmethods($user_contactmethods){
       	  
-    $user_contactmethods['user_position'] = 'Position';  
+    $user_contactmethods['user_position'] = 'Position';
+    $user_contactmethods['user_rss'] = 'RSS'; 
     $user_contactmethods['user_skype'] = 'Skype';
     $user_contactmethods['user_twitter'] = 'Twitter';  
     $user_contactmethods['user_facebook'] = 'Facebook';
@@ -949,7 +957,12 @@ if( ! function_exists('thst_user_contactmethods') ) {
 	$user_contactmethods['user_dribbble'] = 'Dribbble';
 	$user_contactmethods['user_flickr'] = 'Flickr';
 	$user_contactmethods['user_instagram'] = 'Instagram';
+	$user_contactmethods['user_snapchat'] = 'Snapchat';
 	$user_contactmethods['user_soundcloud'] = 'Soundcloud';
+	$user_contactmethods['user_mixcloud'] = 'Mixcloud';
+	$user_contactmethods['user_spotify'] = 'Spotify';
+	$user_contactmethods['user_itunes'] = 'iTunes';
+	$user_contactmethods['user_vine'] = 'Vine';
 	$user_contactmethods['user_tumblr'] = 'Tumblr';
 	$user_contactmethods['user_pinterest'] = 'Pinterest';
 	$user_contactmethods['user_xing'] = 'Xing';

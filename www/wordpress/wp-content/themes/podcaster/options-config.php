@@ -281,6 +281,9 @@
     $content = __( '<p>This is the sidebar content, HTML is allowed.</p>', 'thstlang' );
     Redux::setHelpSidebar( $opt_name, $content );
 
+    $plugin_inuse = get_pod_plugin_active();
+
+    
 
     /*
      * <--- END HELP TABS
@@ -699,6 +702,110 @@
                             'pod-social-footer'         => true,
                         )
                     ),
+                    /*'6' => array(
+                        'alt'     => 'Preset 5',
+                        'img'     => $theme_options_img . 'preset-5.png',
+                        'presets' => array(
+                            /* Template & Color 
+                            'pod-color-darklight'      => 'classic',
+                            'pod-color-primary'         => '#0164bd',
+                            'pod-color-buttons-bg'      => '#0164bd',
+                            'pod-color-buttons-link'      => '#fff',
+                            'pod-page-header-bg'        => '#adadad',
+                            'pod-page-header-text'      => '#ffffff',
+
+                            /* Header 
+                            'pod-featured-header-type'  => 'slideshow',
+                            'pod-featured-header-slides-amount' => '5',
+                            'pod-featured-header-content' => 'newest',
+                            'pod-fh-bg'                 => '#b4d7ed',
+                            'pod-fh-text-color'         => '#fff',
+                            'pod-embed-style'           => 'center',
+                            'pod-embed-widths'          => 'narrow',
+                            'pod-embed-title-position'  => 'above',
+                            'pod-embed-excerpt-position' => 'above',
+                            'pod-frontpage-fetured-ex'  => true,
+                            'pod-frontpage-featured-ex-style' => 'stlye-2',
+                            'pod-frontpage-featured-read-more' => 'show',
+                            'pod-frontpage-nextweek'    => 'show',
+                            'pod-scheduling'            => true,
+
+                            /* Front Page Posts 
+                            'pod-front-posts'           => '9',
+                            'pod-excerpts-type'         => 'force_excerpt',
+                            'pod-excerpts-style'        => 'columns',
+
+                            /* Navigation 
+                            'pod-nav-bg'                => 'transparent',
+                            'pod-nav-bg-if-transparent' => '#c44247',
+                            'pod-nav-color'             => '#fff',
+                            'pod-sticky-header'         => true,
+                            'pod-nav-bg-sticky'         => '#2586e8',
+                            'pod-nav-color-sticky'      => '#222222',
+                            'pod-nav-search'            => true,
+
+
+                            /* Logo 
+
+                            /* Type & Direction 
+                            'pod-typography'            => 'custom',
+                            'pod-typo-main-heading'     => array(
+                                'color'       => '#fff', 
+                                'font-weight'  => '700', 
+                                'font-family' => 'Playfair Display', 
+                            ),
+                            'pod-typo-featured-heading' => array(
+                                'color'       => '#fff', 
+                                'font-weight'  => '400', 
+                                'font-family' => 'Playfair Display',
+                                'font-size' => '64px',
+                            ),
+                            'pod-typo-headings'         => array(
+                                'color'       => '#fff', 
+                                'font-weight'  => '400', 
+                                'font-family' => 'Playfair Display',
+                                'font-size' => '54px',
+                            ),
+                            'pod-typo-text'             => array(
+                                'color'       => '#555555', 
+                                'font-weight'  => '200', 
+                                'font-family' => 'Martel Sans',
+                                'font-size' => '18px',
+                            ),
+                            'pod-reading-direction'     => false,
+
+                            /* Podcast 
+                            'pod-archive-icons'         => 'video_icons',
+                            'pod-list-style'            => 'grid',
+                            'pod-recordings-amount'     => '9',
+                            'pod-archive-hide-in-blog'  => false,
+                            'pod-single-header-display' => 'has-thumbnail',
+                            'pod-single-header-par'     => false,
+                            'pod-single-video-bg'       => false,
+
+                            /* Blog & Avatars 
+                            'pod-blog-layout'           => 'no-sidebar',
+                            'pod-blog-header'           => array(
+                                'url'   =>  ''
+                                ),
+                            'pod-blog-bg-style'         => 'background-repeat:no-repeat; background-size:cover;',
+                            'pod-blog-header-par'       => true,
+                            'pod-comments-setup'        => 'comm',
+                            'pod-pofo-gallery'          => 'slideshow',
+                            'pod-avatar-front'          => false,
+                            'pod-avatar-blog'           => false,
+                            'pod-authname-blog'         => false,
+                            'pod-avatar-single'         => false,
+                            'pod-authname-single'       => true,
+                            'pod-avatar-comments'       => false,
+                            'pod-avatar-authorpages'    => true,
+
+                            /* Social Media 
+                            'pod-social-color'          => 'dark-icons',
+                            'pod-social-nav'            => true,
+                            'pod-social-footer'         => true,
+                        )
+                    ),*/
 				)
 			)
 		)
@@ -732,6 +839,12 @@
                 'transparent' => false,
             ),
             array(
+                'id'       => 'pod-color-buttons-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Buttons</h3>', 'thstlang' ),
+                'content'  => __( 'Use the settings below to customize the buttons for your website.', 'thstlang' ),
+            ),
+            array(
                 'id' => 'pod-color-buttons-bg',
                 'type' => 'color',
                 'title' => __('Button Background Color', 'thstlang'),
@@ -745,13 +858,19 @@
             array(
                 'id' => 'pod-color-buttons-link',
                 'type' => 'color',
-                'title' => __('Button Link Color', 'thstlang'),
+                'title' => __('Button Text Color', 'thstlang'),
                 'subtitle' => __('Which color would you like to use for the text on your buttons?', 'thstlang'),
                 'desc' => __('Use the colorpicker to choose a color for the text on your buttons.', 'thstlang'),
                 'default' => '#fff',
                 'validate' => 'color',
                 'transparent' => false,
                 'output'    => array('color' => '.input[type="submit"]:link, input[type="submit"]:visited, #respond #commentform #submit:link, #respond #commentform #submit:visited, a.butn:link, a.butn:visited, .butn:link, .butn:visited,input.secondary[type="submit"], #respond #cancel-comment-reply-link:link, #respond #cancel-comment-reply-link:visited, #comments .commentlist li .comment-body .reply a:link, #comments .commentlist li .comment-body .reply a:visited,#respond #commentform #submit, .wpcf7-form-control.wpcf7-submit, .fromtheblog.list article .post-content .cats a:link, .fromtheblog.list article .post-content .cats a:visited')
+            ),
+            array(
+                'id'       => 'pod-color-page-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Page Headers</h3>', 'thstlang' ),
+                'content'  => __( 'Use the settings below to customize the header section for your website.', 'thstlang' ),
             ),
 			array(
 			    'id'       => 'pod-page-header-bg',
@@ -763,6 +882,16 @@
 			    'transparent' => false,
 			),
             array(
+                'id'       => 'pod-page-header-title',
+                'type'     => 'color',
+                'title'    => __('Page Header Title Color', 'thstlang'),
+                'subtitle' => __('Set the text color for the headers used on your pages.', 'thstlang'),
+                'desc'     => __('Use the color picker to select the text color.', 'thstlang'),           
+                'default' => '#fff',
+                'transparent' => false,
+                'output'    => array('color' => '.page .reg .heading h1, .podcast-archive .reg .heading h1, .search .reg .heading h1, .archive .reg .heading h1, .archive .reg .heading h2, .blog .static .title h1, .archive .author_profile .info .author_name, .page .reg .heading .title, .archive .reg .heading .title, .search .reg .heading .title')
+            ),
+            array(
                 'id'       => 'pod-page-header-text',
                 'type'     => 'color',
                 'title'    => __('Page Header Text Color', 'thstlang'),
@@ -770,7 +899,7 @@
                 'desc'     => __('Use the color picker to select the text color.', 'thstlang'),           
                 'default' => '#fff',
                 'transparent' => false,
-                'output'    => array('color' => '.page .reg .heading h1, .podcast-archive .reg .heading h1, .search .reg .heading h1, .archive .reg .heading h1, .postfooter, .blog .static .title h1, .archive .reg .heading .title p, .page .reg .heading .title p')
+                'output'    => array('color' => '.postfooter, .archive .reg .heading .title p, .page .reg .heading .title p')
             ),
             array(
                 'id' => 'pod-filter-active',
@@ -790,7 +919,9 @@
                 'transparent' => false,
                 'output'    => array('background-color' => '
                     .screen, 
-                    .translucent, 
+                    .latest-episode.front-header .translucent,
+                    .front-page-header.front-header .translucent,
+                    .single .single-featured.has-featured-image .translucent, 
                     .single .single-featured.thumb_bg .background, 
                     .front-page-header.slideshow .has-header .inside, 
                     .front-page-header.static.has-header .inside,
@@ -799,6 +930,12 @@
                     'color'     => '#000000',
                     'alpha'     => 0.5
                 ),                    
+            ),
+            array(
+                'id'       => 'pod-color-footer-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Footer</h3>', 'thstlang' ),
+                'content'  => __( 'Use the settings below to customize the footer section for your website.', 'thstlang' ),
             ),
             array(
                 'id'       => 'pod-footer-navigation',
@@ -912,12 +1049,20 @@
                 'id' => 'pod-featured-heading',
                 'type' => 'text',
                 'required' => array( 'pod-featured-header-type', '=', array( 'static', 'static-posts', 'slideshow' )),
-                'title' => __('Featured Post Title', 'thstlang'),
+                'title' => __('Header Title', 'thstlang'),
                 'subtitle' => __('What is the title of your featured post section?', 'thstlang'),
                 'desc' => __('Enter the title of your featured post section into the text field above.', 'thstlang'),
                 'placeholder' => 'Featured Episode',
                 'default' => 'Featured Episode',
             ),
+        )
+    ) );
+    Redux::setSection( $opt_name, array(
+        'title'      => __( 'Background', 'thstlang' ),
+        'desc'       => __( 'Set the options for your header background', 'thstlang' ),
+        'id'         => 'pod-subsection-fheader-background',
+        'subsection' => true,
+        'fields'     => array(
             array(
                 'id' => 'pod-upload-frontpage-header',
                 'type' => 'media',
@@ -940,11 +1085,22 @@
             array(
                 'id'=>'pod-fh-bg',
                 'type' => 'color',
-                'title' => __('Featured Header Background', 'thstlang'),
+                'title' => __('Header Background Color', 'thstlang'),
                 'subtitle' => __('Set the background for your featured header.', 'thstlang'),
                 'desc' => __('This color will be used when no background image has been uploaded. ', 'thstlang'),
                 'default' => '#24292c',
-                'transparent' => false
+                'transparent' => false,
+            ),
+            array(
+                'id' => 'pod-fh-text-color',
+                'type' => 'color',
+                'title' => __('Header Text Color', 'thstlang'),
+                'subtitle' => __('Which text color would you like to use?', 'thstlang'),
+                'desc' => __('Use the colorpicker to choose a text color.', 'thstlang'),
+                'default' => '#fff',
+                'validate' => 'color',
+                'transparent' => false,
+                'output'    => array( 'color' => '.latest-episode .main-featured-post .featured-excerpt, .front-page-header .featured-excerpt' )
             ),
             array(
                 'id'             => 'pod-fh-padding',
@@ -958,9 +1114,9 @@
                 'bottom'           => true,
                 'left'           => false,
                 'right'           => false,
-                'title'          => __('Padding/Margin Option', 'thstlang'),
-                'subtitle'       => __('Allow your users to choose the spacing or margin they want.', 'thstlang'),
-                'desc'           => __('You can enable or disable any piece of this field. Top, Right, Bottom, Left, or Units.', 'thstlang'),
+                'title'          => __('Padding', 'thstlang'),
+                'subtitle'       => __('Do you want to set your padding?', 'thstlang'),
+                'desc'           => __('Add padding to the top or bottom of your header.', 'thstlang'),
                 'default'            => array(
                     'padding-top'     => '75px', 
                     'padding-bottom'  => '75px', 
@@ -988,55 +1144,120 @@
                 'subtitle' => __('Would you like to activate parallax scrolling?', 'thstlang'),
                 'desc' => __('Turn the switch to "On" to activate Parallax scrolling for your blog header.', 'thstlang'),
                 'default' => false,
-            ),
-            array(
-                'id' => 'pod-frontpage-fetured-ex',
-                'type' => 'switch',
-                'required' => array( 'pod-featured-header-type', '!=', array( 'text' )),
-                'title' => __('Featured Excerpt', 'thstlang'),
-                'subtitle' => __('Would you like to display a featured excerpt?', 'thstlang'),
-                'desc' => __('Turn the switch to "On" to display a featured excerpt on the front page.', 'thstlang'),
-                'default' => false,
-            ),
-            /*array(
-                'id'       => 'pod-featured-embedded-content',
-                'type'     => 'raw',
-                'title'  => __( '<h3>Featured Embedded Content</h3>', 'thstlang' ),
-                'content'  => __( 'Use the settings below to customize the featured header section on your static front page.', 'thstlang' ),
-            ),
+            ),        
+        )
+    ) );
+    Redux::setSection( $opt_name, array(
+        'title'      => __( 'Embeds', 'thstlang' ),
+        'desc'       => __( 'Set the options for your header background', 'thstlang' ),
+        'id'         => 'pod-subsection-fheader-embeds',
+        'subsection' => true,
+        'fields'     => array(
             array(
                 'id'=>'pod-embed-style',
-                'type' => 'image_select',
-                'title' => __('Embed Layout', 'thstlang'), 
-                'subtitle' => __('What template would you like to use?', 'thstlang'),
-                'desc' => __('Choose between classic and dark.', 'thstlang'),
+                'type' => 'select',
+                'title' => __('Embed Position', 'thstlang'), 
+                'subtitle' => __('How would you like to display your embeds?', 'thstlang'),
+                'desc' => __('Choose between left, right and centered.', 'thstlang'),
                 'options' => array(
-                    'left' => array('title' => 'Left', 'img' => $theme_options_img. 'color-options-classic.png'),
-                    'right' => array('title' => 'Right', 'img' => $theme_options_img. 'color-options-dark.png'),
-                    'center-bottom' => array('title' => 'Center Bottom', 'img' => $theme_options_img. 'color-options-dark.png'),
-                    'center-top' => array('title' => 'Center Top', 'img' => $theme_options_img. 'color-options-dark.png')
+                    'left' => 'Left',
+                    'center' => 'Centered',
+                    'right' => 'Right',
                 ),
                 'default' => 'left'
             ),
             array(
                 'id'=>'pod-embed-widths',
-                'type' => 'image_select',
+                'type' => 'select',
                 'title' => __('Embed Widths', 'thstlang'), 
-                'subtitle' => __('What template would you like to use?', 'thstlang'),
-                'desc' => __('Choose between classic and dark.', 'thstlang'),
+                'subtitle' => __('How wide would you like your embeds to be?', 'thstlang'),
+                'desc' => __('Choose between narrow, medium, wide and full.', 'thstlang'),
                 'options' => array(
-                    'narrow' => array('title' => 'Narrow', 'img' => $theme_options_img. 'color-options-classic.png'),
-                    'equal' => array('title' => 'Equal', 'img' => $theme_options_img. 'color-options-dark.png'),
-                    'wide' => array('title' => 'wide', 'img' => $theme_options_img. 'color-options-dark.png'),
+                    'narrow' => 'Narrow', 
+                    'equal' =>'Medium',
+                    'wide' => 'Wide',
+                    'full' => 'Full (Only Centered)',
                 ),
                 'default' => 'wide'
-            ),*/
-            array(
-                'id'       => 'pod-featured-header-schedule',
-                'type'     => 'raw',
-                'title'  => __( '<h3>Scheduled Posts</h3>', 'thstlang' ),
-                'content'  => __( 'Use the settings below to customize the featured header section on your static front page.', 'thstlang' ),
             ),
+            array(
+                'id' => 'pod-embed-aligment',
+                'type' => 'radio',
+                'required' => array( 'pod-featured-header-type', '=', array( 'static' ) ),
+                'title' => __('Aligment', 'thstlang'),
+                'subtitle' => __('How do you want your header and text elements to be aligned?', 'thstlang'),
+                'desc' => __('Set the alignment above, choose between left (default), center and right.', 'thstlang'),
+                'options' => array(
+                    'left' => 'Left',
+                    'center' => 'Center',
+                    'right' => 'Right'
+                ),
+                'default' => 'left'
+            ),        
+        )
+    ) );
+    Redux::setSection( $opt_name, array(
+        'title'      => __( 'Excerpt', 'thstlang' ),
+        'desc'       => __( 'Set the options for your excerpt', 'thstlang' ),
+        'id'         => 'pod-subsection-fheader-excerpt',
+        'subsection' => true,
+        'fields'     => array(
+            array(
+                'id' => 'pod-frontpage-fetured-ex',
+                'type' => 'switch',
+                //'required' => array( 'pod-featured-header-type', '==', array( 'static' )),
+                'title' => __('Featured Excerpt', 'thstlang'),
+                'subtitle' => __('Would you like to display a featured excerpt?', 'thstlang'),
+                'desc' => __('Turn the switch to "On" to display a featured excerpt on the front page.', 'thstlang'),
+                'default' => false,
+            ),
+            array(
+                'id' => 'pod-frontpage-featured-ex-style',
+                'type' => 'image_select',
+                'title' => __('Excerpt Style', 'thstlang'), 
+                'required' => array('pod-frontpage-fetured-ex', '=', true),
+                'subtitle' => __('What excerpt style would you like to use?', 'thstlang'),
+                'desc' => __('Choose between styles.', 'thstlang'),
+                'options' => array(
+                    'style-1' => array('title' => 'Style 1', 'img' => $theme_options_img. 'excerpt-1.png'),
+                    'style-2' => array('title' => 'Style 2', 'img' => $theme_options_img. 'excerpt-2.png'),
+                ),
+                'default' => 'style-1'
+            ),
+            array(
+                'id' => 'pod-frontpage-featured-ex-posi',
+                'type' => 'radio',
+                'required' => array( 'pod-frontpage-fetured-ex', '=', true ),
+                'title' => __('Excerpt Position', 'thstlang'),
+                'subtitle' => __('Where would you like to display your featured post excerpt?', 'thstlang'),
+                'desc' => __('Set the position, choose between above and below (default) your media.', 'thstlang'),
+                'options' => array(
+                    'above' => 'Above Media',
+                    'below' => 'Below Media',
+                ),
+                'default' => 'below'
+            ),
+             array(
+                'id' => 'pod-frontpage-featured-read-more',
+                'type' => 'button_set',
+                'title' => __('Read More Link', 'thstlang'),
+                'required' => array('pod-frontpage-fetured-ex', '=', true),
+                'subtitle' => __('Would you like to show or hide the <em>Read More</em> link?', 'thstlang'),
+                'desc' => __('Choose to hide or show the <em>Read More</em> link.', 'thstlang'),
+                'options' => array(
+                    'show' => 'Show',
+                    'hide' => 'Hide',
+                    ),
+                'default' => 'show'
+            ),        
+        )
+    ) );
+    Redux::setSection( $opt_name, array(
+        'title'      => __( 'Scheduled Posts', 'thstlang' ),
+        'desc'       => __( 'Set the options for your excerpt', 'thstlang' ),
+        'id'         => 'pod-subsection-fheader-scheduled',
+        'subsection' => true,
+        'fields'     => array(
             array(
                 'id' => 'pod-frontpage-nextweek',
                 'type' => 'button_set',
@@ -1134,8 +1355,7 @@
                 'subtitle' => __('How many podcast posts would you like to display?', 'thstlang'),
                 'desc' => __('Enter the URL in the field above.', 'thstlang'),
                 'validate' => 'url',
-            ),
-
+            ),        
         )
     ) );
 	Redux::setSection( $opt_name, array(
@@ -1249,6 +1469,12 @@
         'title' => __('Navigation', 'thstlang'),
         'desc' => __('<p class="description">Set up your navigation.</p>', 'thstlang'),
         'fields' => array(
+            array(
+                'id'       => 'pod-nav-bg-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Background</h3>', 'thstlang' ),
+                'content'  => __( 'Use the settings below to customize the buttons for your website.', 'thstlang' ),
+            ),
         	array(
                 'id'=>'pod-nav-bg',
                 'type' => 'color', 
@@ -1267,6 +1493,33 @@
                 'default' => '#349099',
                 'transparent'   => false,
            ),
+            /*array(
+                'id' => 'pod-nav-border',
+                'type' => 'switch',
+                'title' => __('Navigation Border', 'thstlang'), 
+                'subtitle' => __('Would you like to display a border at the bottom of the navigation bar?', 'thstlang'),
+                'desc' => __('Turn the switch to "on" to activate the border.', 'thstlang'),
+                'default' => false
+            ),
+            array(
+                'id'       => 'pod-nav-border-color',
+                'type'     => 'color',
+                'required' => array('pod-nav-border', '=', true),
+                'title'    => __('Navigation Border Color', 'thstlang'),
+                'subtitle' => __('Set the color for the border.', 'thstlang'),
+                'desc'     => __('Use the color picker to select the border color.', 'thstlang'),         
+                'default' => '#eee',
+                'transparent' => false,
+                'output'    => array(
+                    'border-color' => '.latest-episode.nav-has-border, .front-page-header.nav-has-border'
+                    )
+            ),*/
+            array(
+                'id'       => 'pod-nav-links-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Menu & Links</h3>', 'thstlang' ),
+                'content'  => __( 'Use the settings below to customize the settings for your links.', 'thstlang' ),
+            ),
             array(
                 'id'       => 'pod-nav-color',
                 'type'     => 'color',
@@ -1296,9 +1549,14 @@
                 'title'    => __('Navigation Dropdown Menu Hover', 'thstlang'),
                 'subtitle' => __('Set the hover color for the drop down menu in the navigation.', 'thstlang'),
                 'desc'     => __('Use the hover color picker to select the drop down menu color.', 'thstlang'),         
-                'default' => '#333',
+                'default' => '#262626',
                 'output'   => array('background-color' => '#nav .thst-menu li > .sub-menu li a:hover'),
                 'transparent' => false,
+            ),array(
+                'id'       => 'pod-nav-sticky-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Sticky</h3>', 'thstlang' ),
+                'content'  => __( 'Use the setting below to customize your sticky menu.', 'thstlang' ),
             ),
             array(
 				'id'=>'pod-sticky-header',
@@ -1336,6 +1594,12 @@
                     )
             ),
             array(
+                'id'       => 'pod-nav-search-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Search</h3>', 'thstlang' ),
+                'content'  => __( 'Activate and use the setting below to customize your search bar.', 'thstlang' ),
+            ),
+            array(
                 'id'=>'pod-nav-search',
                 'type' => 'switch', 
                 'title' => __('Search Bar', 'thstlang'),
@@ -1355,6 +1619,12 @@
                 'output' => array(
                     'color' => '.nav-search-form .search-container #s'
                     )
+            ),
+            array(
+                'id'       => 'pod-nav-responsive-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Responsive</h3>', 'thstlang' ),
+                'content'  => __( 'Use the setting below to customize your responsive menu.', 'thstlang' ),
             ),
 			array(
 				'id'=>'pod-responsive-style',
@@ -1430,23 +1700,11 @@
                 'default' => 'sans-serif'
             ),
             array(
-                'id'          => 'pod-typo-main-heading',
-                'type'        => 'typography', 
-                'title'       => __('Main Heading Font', 'thstlang'),
+                'id'       => 'pod-type-global-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Global Font Settings</h3>', 'thstlang' ),
                 'required' => array('pod-typography', '=', 'custom'),
-                'google'      => true, 
-                'font-backup' => false,
-                'line-height' => false,
-                'font-size'   => false,
-                'output'      => array('header .main-title a:link, header .main-title a:visited'),
-                'units'       =>'px',
-                'subtitle'    => __('Set the font for your main heading.', 'thstlang'),
-                'default'     => array(
-                    'color'       => '#555', 
-                    'font-style'  => '400', 
-                    'font-family' => 'Raleway', 
-                    'google'      => true,
-                ),
+                'content'  => __( 'Use the settings below to set font settings across your website.', 'thstlang' ),
             ),
             array(
                 'id'          => 'pod-typo-headings',
@@ -1456,12 +1714,12 @@
                 'google'      => true, 
                 'font-backup' => false,
                 'line-height' => false,
-                'output'      => array('h1, h2, h3, h4, h5, h6'),
+                'output'      => array('h1, h2, h3, h4, h5, h6, .post .entry-header .entry-title'),
                 'units'       =>'px',
                 'subtitle'    => __('Set the font for your headings.', 'thstlang'),
                 'default'     => array(
                     'color'       => '#333', 
-                    'font-style'  => '600', 
+                    'font-weight'  => '600', 
                     'font-family' => 'Raleway', 
                     'google'      => true,
                     'font-size'   => '33px', 
@@ -1480,12 +1738,334 @@
                 'subtitle'    => __('Set the font for your paragraphs.', 'thstlang'),
                 'default'     => array(
                     'color'       => '#555', 
-                    'font-style'  => '400', 
+                    'font-weight'  => '400', 
                     'font-family' => 'Raleway', 
                     'google'      => true,
                     'font-size'   => '18px', 
                 ),
             ),
+            array(
+                'id'       => 'pod-type-menu-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Logo &amp; Menu</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to set font settings across your website.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-main-heading',
+                'type'        => 'typography', 
+                'title'       => __('Main Heading Font', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => false,
+                'font-size'   => false,
+                'output'      => array('header .main-title a:link, header .main-title a:visited'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your main heading.', 'thstlang'),
+                'default'     => array(
+                    'color'       => '#555', 
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-menu-links',
+                'type'        => 'typography', 
+                'title'       => __('Menu Font', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => false,
+                'font-size'   => false,
+                'color'       => false,
+                'output'      => array('#nav .thst-menu li a'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your menu.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '600', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-heading-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Featured Header</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts on your featured header on the front page.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-featured-heading',
+                'type'        => 'typography', 
+                'title'       => __('Featured Header Font', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => false,
+                'output'      => array(
+                    '.front-page-header .text h2, 
+                    .front-page-header.text .content-text h2,
+                    .latest-episode .main-featured-post h2 a, 
+                    .front-page-header .text .pulls-right h2, 
+                    .front-page-header .text .pulls-left h2, 
+                    .latest-episode .main-featured-post .pulls-right h2, 
+                    .latest-episode .main-featured-post .pulls-left h2, 
+                    .front-page-header .text .pulls-right h2 a, 
+                    .front-page-header .text .pulls-left h2 a, 
+                    .latest-episode .main-featured-post .pulls-right h2 a, 
+                    .latest-episode .main-featured-post .pulls-left h2 a'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your headings.', 'thstlang'),
+                'default'     => array(
+                    'color'       => '#fff', 
+                    'font-weight'  => '400', 
+                    'font-family' => 'Playfair Display', 
+                    'google'      => true,
+                    'font-size'   => '64px', 
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-featured-text',
+                'type'        => 'typography', 
+                'title'       => __('Featured Header Text', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => false,
+                'color'       => false,
+                'output'      => array(
+                    '.latest-episode .main-featured-post .featured-excerpt, .front-page-header .featured-excerpt'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for the rest of the text, including excerpts.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                    'font-size'   => '16px',
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-front-page-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Front Page Posts</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts for the posts found on the front page.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-frontpage-heading',
+                'type'        => 'typography', 
+                'title'       => __('Headings', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array(
+                    '.list-of-episodes article.list .post-header h2'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your headings.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family'  => 'Raleway', 
+                    'google'       => true,
+                    'font-size'    => '26px',
+                    'line-height'  => '34px'
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-frontpage-text',
+                'type'        => 'typography', 
+                'title'       => __('Text', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array(
+                    '.list-of-episodes article .post-content'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for the rest of the text, including excerpts.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                    'font-size'   => '18px',
+                    'line-height' => '32px'
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-single-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Single Posts</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts for the posts found on the front page.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-single-heading',
+                'type'        => 'typography', 
+                'title'       => __('Headings', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array(
+                    '.single .single-featured h2, .single .post .entry-header .entry-title'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your headings.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '600', 
+                    'font-family'  => 'Raleway', 
+                    'google'       => true,
+                    'font-size'    => '26px',
+                    'line-height'  => '34px'
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-single-text',
+                'type'        => 'typography', 
+                'title'       => __('Text', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array(
+                    '.single .post .entry-content'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for the rest of the text, including excerpts.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                    'font-size'   => '18px',
+                    'line-height' => '32px'
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-page-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Page Posts</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts for the posts found on the front page.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-page-heading',
+                'type'        => 'typography', 
+                'title'       => __('Headings', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array('.page .reg .heading h1, .podcast-archive .reg .heading h1, .search .reg .heading h1, .archive .reg .heading h1'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your headings.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '600', 
+                    'font-family'  => 'Raleway', 
+                    'google'       => true,
+                    'font-size'    => '26px',
+                    'line-height'  => '34px'
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-page-text',
+                'type'        => 'typography', 
+                'title'       => __('Text', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array('.page .post .entry-content, .podcast-archive .post .entry-content, .search .post .entry-content, .archive .post .entry-content, .page .reg .heading .title p, .archive .reg .heading .title p, .search .reg .heading .title p'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for the rest of the text, including excerpts.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                    'font-size'   => '18px',
+                    'line-height' => '32px'
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-blog-header-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Blog Header</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts for your blog header.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-blog-heading',
+                'type'        => 'typography', 
+                'title'       => __('Headings', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'font-size'   => true,
+                'line-height' => false,
+                'color'       => false,
+                'output'      => array('.blog .static .heading .title h1'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your heading.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '600', 
+                    'font-family'  => 'Raleway', 
+                    'google'       => true,
+                    'font-size'   => '42px',
+                ),
+            ),
+            array(
+                'id'          => 'pod-typo-blog-text',
+                'type'        => 'typography', 
+                'title'       => __('Blurb', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'line-height' => true,
+                'color'       => false,
+                'output'      => array('.blog .static .heading .title p'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for the rest of the text, including excerpts.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '400', 
+                    'font-family' => 'Raleway', 
+                    'google'      => true,
+                    'font-size'   => '18px',
+                    'line-height' => '32px'
+                ),
+            ),
+            array(
+                'id'       => 'pod-type-buttons-raw-title',
+                'type'     => 'raw',
+                'title'  => __( '<h3>Buttons</h3>', 'thstlang' ),
+                'required' => array('pod-typography', '=', 'custom'),
+                'content'  => __( 'Use the settings below to customize the fonts for your buttons.', 'thstlang' ),
+            ),
+            array(
+                'id'          => 'pod-typo-buttons',
+                'type'        => 'typography', 
+                'title'       => __('Buttons', 'thstlang'),
+                'required' => array('pod-typography', '=', 'custom'),
+                'google'      => true, 
+                'font-backup' => false,
+                'font-size'   => false,
+                'line-height' => false,
+                'color'       => false,
+                'output'      => array('input[type="submit"], .form-submit #submit, #respond #commentform #submit, a.butn:link, a.butn:visited, .butn'),
+                'units'       =>'px',
+                'subtitle'    => __('Set the font for your buttons.', 'thstlang'),
+                'default'     => array(
+                    'font-weight'  => '600', 
+                    'font-family'  => 'Raleway', 
+                    'google'       => true,
+                ),
+            ),  
+
+
             array(
                 'id'=>'pod-typekit-code',
                 'type' => 'textarea',
@@ -1532,6 +2112,18 @@
                 'subtitle' => __('In what category have you stored your podcast posts?', 'thstlang'),
                 'desc' => __('Select which category your podcast entries have been saved to. This will be used to display your podcast archive.', 'thstlang'),
             ),
+            /* If SSP is active. */
+            ( ( $plugin_inuse == 'ssp' ) 
+                ? array(
+                    'id' => 'pod-recordings-category-ssp',
+                    'type' => 'select',
+                    'data' => 'terms',
+                    'args' => array('taxonomies'=>'series', 'args'=>array()),
+                    'title' => __('Seriously Simple Podcasting Series', 'thstlang'),
+                    'subtitle' => __('In what category have you stored your podcast posts?', 'thstlang'),
+                    'desc' => __('Select which category your podcast entries have been saved to. This will be used to display your podcast archive.', 'thstlang'),
+                )
+                : false ),
             array(
                 'id'       => 'pod-archive-title',
                 'type'     => 'raw',
@@ -1895,6 +2487,15 @@
                 'placeholder' => 'hello@example.com',
             ),
             array(
+                'id' => 'pod-rss',
+                'type' => 'text',
+                'title' => __('RSS Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
                 'id' => 'pod-facebook',
                 'type' => 'text',
                 'title' => __('Facebook Icon', 'thstlang'),
@@ -1931,9 +2532,45 @@
                 'placeholder' => 'http://www.example.com/',
             ),
             array(
+                'id' => 'pod-snapchat',
+                'type' => 'text',
+                'title' => __('Snapchat Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
+                'id' => 'pod-itunes',
+                'type' => 'text',
+                'title' => __('iTunes Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
                 'id' => 'pod-soundcloud',
                 'type' => 'text',
-                'title' => __('Soundcloud', 'thstlang'),
+                'title' => __('Soundcloud Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
+                'id' => 'pod-mixcloud',
+                'type' => 'text',
+                'title' => __('Mixcloud Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
+                'id' => 'pod-spotify',
+                'type' => 'text',
+                'title' => __('Spotify Icon', 'thstlang'),
                 'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
                 'desc' => __('Paste the url of your profile here.', 'thstlang'),
                 'validate' => 'url',
@@ -1979,6 +2616,15 @@
                 'id' => 'pod-vimeo',
                 'type' => 'text',
                 'title' => __('Vimeo Icon', 'thstlang'),
+                'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
+                'desc' => __('Paste the url of your profile here.', 'thstlang'),
+                'validate' => 'url',
+                'placeholder' => 'http://www.example.com/',
+            ),
+            array(
+                'id' => 'pod-vine',
+                'type' => 'text',
+                'title' => __('Vine Icons', 'thstlang'),
                 'subtitle' => __('Would you like to display a social icon?', 'thstlang'),
                 'desc' => __('Paste the url of your profile here.', 'thstlang'),
                 'validate' => 'url',
